@@ -1,7 +1,5 @@
 import React from 'react';
 import DThree from '../DThree/DThree.jsx';
-
-
 class TetramerReader extends React.Component {
 
   constructor(props) {
@@ -47,6 +45,14 @@ class TetramerReader extends React.Component {
     if (parseInt(this.state.selected) === 2) {
       f1 = process.env.PUBLIC_URL+"/mean_cgDNA_136.txt";
       f2 = process.env.PUBLIC_URL+"/cov_cgDNA_136.txt";
+    }
+    if (parseInt(this.state.selected) === 3) {
+      f1 = process.env.PUBLIC_URL+"/MD_mean_bstj_cgf_136.txt";
+      f2 = process.env.PUBLIC_URL+"/MD_cov_bstj_cgf_136.txt";
+    }
+    if (parseInt(this.state.selected) === 4) {
+      f1 = process.env.PUBLIC_URL+"/mean_TX2_3S_C1_cg_136.txt";
+      f2 = process.env.PUBLIC_URL+"/cov_TX2_3S_C1_cg_136.txt";
     }
     fetch(f1)
     .then((r) => r.text())
@@ -102,6 +108,9 @@ class TetramerReader extends React.Component {
           <select name="selected" value={this.state.selected} onChange={this.inputChanged}>
             <option id="1" value="1" key="1">TX3 X-ray</option>
             <option id="2" value="2" key="2">cgDNA+ 136</option>
+            <option id="3" value="3" key="3">MD</option>
+            <option id="4" value="4" key="4">TX2 X-ray</option>
+
           </select>
           <button onClick={this.loadSet}>Load Dataset</button>
           <select name="tetramer" value={this.state.tetramer} onChange={this.inputChanged}>
@@ -117,4 +126,3 @@ class TetramerReader extends React.Component {
 }
 
 export default TetramerReader;
-

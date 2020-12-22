@@ -130,6 +130,7 @@ class DThree extends Component {
     let x = 0;
     let dir = 1;
     const animate = () => {
+      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
       let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(this.state.modeNum)]));
       let points = ref.get30Coordinates(icnew, this.state.tetramer);
       let i = 0;

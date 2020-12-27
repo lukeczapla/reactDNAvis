@@ -1,7 +1,8 @@
-
+import './DThree.css';
 import React, {Component} from 'react';
 import * as trois from 'three';
 import numeric from 'numeric';
+import Eigenvector from './Eigenvector.jsx';
 import * as ref from './References.jsx';
 
 class DThree extends Component {
@@ -21,7 +22,9 @@ class DThree extends Component {
       mean: props.mean,
       cov: props.cov,
       tetramer: props.tetramer,
-      eigenvalues: []
+      eigenvalues: [],
+      eigenvectors: [],
+      eigenlist: []
     };
     this.scene = null;
     this.camera = null;
@@ -72,8 +75,14 @@ class DThree extends Component {
     let F = numeric.inv(cov);
     let eigen = ref.jeigen(F);
     console.log(eigen);
+    let eigenlist = [];
+    eigen.eigenvalues.forEach((item, index) => {
+	let val = {index: index, value: item};
+	eigenlist.push(val);
+    });
+    eigenlist.sort((a, b) => (a.value > b.value ? 1 : -1));
     this.setState({evalue: eigen.eigenvalues[parseInt(this.state.modeNum)],
-    eigenvalues: eigen.eigenvalues});
+    eigenvalues: eigen.eigenvalues, eigenvectors: eigen.eigenvectors, eigenlist: eigenlist});
     let demo = this.state.mean;
     let points = ref.get30Coordinates(demo, this.state.tetramer);
     console.log(points);
@@ -140,10 +149,10 @@ class DThree extends Component {
       })
       //this.camera.position.x = 5*Math.cos(angle);
       //this.camera.position.y = 5*Math.sin(angle);
-      let phi = this.state.translateX / 100.0; let theta = this.state.translateY / 100.0;
-      this.camera.position.x = 30.0*Math.cos(theta)*Math.sin(phi);
-      this.camera.position.y = 30.0*Math.sin(theta)*Math.sin(phi);
-      this.camera.position.z = 30.0*Math.cos(phi);
+      let theta = this.state.translateX / 100.0; let phi = -this.state.translateY / 100.0;
+      this.camera.position.x = 30.0*Math.cos(theta)*Math.cos(phi);
+      this.camera.position.z = 30.0*Math.sin(theta)*Math.cos(phi);
+      this.camera.position.y = 30.0*Math.sin(phi);
     //  console.log(this.state.translateX + " and " + this.state.translateY);
       this.camera.lookAt(0.0, 0.0, 0.0);
       requestAnimationFrame(animate);
@@ -176,14 +185,17 @@ class DThree extends Component {
   }
 
   render() {
+    let valtitles = ["pair 1", "pho 1", "basestep", "pho 2", "pair 2"];
+    let meanvals = [this.state.mean.slice(0,6), this.state.mean.slice(6, 12), this.state.mean.slice(12, 18), this.state.mean.slice(18, 24), this.state.mean.slice(24, 30)];
     return (<>
         {this.state.eigenvalues.length > 0 ? <select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
-        {this.state.eigenvalues.map((value, index) => (
-            <option key={value} value={index}>{index + ": eigenvalue: " + value}</option>
+        {this.state.eigenlist.map((value) => (
+            <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
           ))}</select>
         : null}
-
-<br/>{"Eigenvalue: " + this.state.evalue}<div ref={ref => (this.mount = ref)}></div></>);
+	<table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
+	<div ref={ref => (this.mount = ref)}></div>
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}</>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

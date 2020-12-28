@@ -16,6 +16,7 @@ class Eigenvector extends Component {
                         };
 
 		return (
+	<><b>Eigenvector (linear combination, norm = 1)</b>
 	<table><tbody>
 	<tr>
 	<td>Pair 1</td>
@@ -33,7 +34,7 @@ class Eigenvector extends Component {
         <td>Pair 2</td>
         {values.pair1.map((element) => (<td key={element}>{element}</td>))}
 	</tr>
-	</tbody></table>
+	</tbody></table>{this.props.vector.reduce((acc, value) => acc+value**2,0)}</>
 		);
 
 	}

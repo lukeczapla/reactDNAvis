@@ -81,8 +81,9 @@ class DThree extends Component {
 	eigenlist.push(val);
     });
     eigenlist.sort((a, b) => (a.value > b.value ? 1 : -1));
-    this.setState({evalue: eigen.eigenvalues[parseInt(this.state.modeNum)],
-    eigenvalues: eigen.eigenvalues, eigenvectors: eigen.eigenvectors, eigenlist: eigenlist});
+    let modeN = eigenlist[0].index + '';
+    this.setState({evalue: eigen.eigenvalues[parseInt(modeN)],
+    eigenvalues: eigen.eigenvalues, eigenvectors: eigen.eigenvectors, eigenlist: eigenlist, modeNum: modeN});
     let demo = this.state.mean;
     let points = ref.get30Coordinates(demo, this.state.tetramer);
     console.log(points);
@@ -135,12 +136,12 @@ class DThree extends Component {
 
     this.camera.lookAt(0.0, 0.0, 0.0);
 
-    let scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
+    let scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(modeN)]);
     let x = 0;
     let dir = 1;
     const animate = () => {
-      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
-      let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(this.state.modeNum)]));
+      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(modeN)]);
+      let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(modeN)]));
       let points = ref.get30Coordinates(icnew, this.state.tetramer);
       let i = 0;
       points.forEach((atom) => {
@@ -193,7 +194,7 @@ class DThree extends Component {
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
           ))}</select>
         : null}
-	<table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
+	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}</>);
   }

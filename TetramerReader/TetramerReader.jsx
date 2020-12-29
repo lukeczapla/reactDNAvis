@@ -39,20 +39,20 @@ class TetramerReader extends React.Component {
     let covarianceT = {};
     let meanT = {};
     if (parseInt(this.state.selected) === 1) {
-      f1 = process.env.PUBLIC_URL+"/mean_TX3_3S_C1_cg_136.txt";
-      f2 = process.env.PUBLIC_URL+"/cov_TX3_3S_C1_cg_136.txt";
+      f1 = process.env.PUBLIC_URL+"mean_TX3_3S_C1_cg_136.txt";
+      f2 = process.env.PUBLIC_URL+"cov_TX3_3S_C1_cg_136.txt";
     }
     if (parseInt(this.state.selected) === 2) {
-      f1 = process.env.PUBLIC_URL+"/mean_cgDNA_136.txt";
-      f2 = process.env.PUBLIC_URL+"/cov_cgDNA_136.txt";
+      f1 = process.env.PUBLIC_URL+"mean_cgDNA_136.txt";
+      f2 = process.env.PUBLIC_URL+"cov_cgDNA_136.txt";
     }
     if (parseInt(this.state.selected) === 3) {
-      f1 = process.env.PUBLIC_URL+"/MD_mean_bstj_cgf_136.txt";
-      f2 = process.env.PUBLIC_URL+"/MD_cov_bstj_cgf_136.txt";
+      f1 = process.env.PUBLIC_URL+"MD_mean_bstj_cgf_136.txt";
+      f2 = process.env.PUBLIC_URL+"MD_cov_bstj_cgf_136.txt";
     }
     if (parseInt(this.state.selected) === 4) {
-      f1 = process.env.PUBLIC_URL+"/mean_TX2_3S_C1_cg_136.txt";
-      f2 = process.env.PUBLIC_URL+"/cov_TX2_3S_C1_cg_136.txt";
+      f1 = process.env.PUBLIC_URL+"mean_TX2_3S_C1_cg_136.txt";
+      f2 = process.env.PUBLIC_URL+"cov_TX2_3S_C1_cg_136.txt";
     }
     fetch(f1)
     .then((r) => r.text())

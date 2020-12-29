@@ -1,5 +1,6 @@
 import numeric from 'numeric';
 
+let stepM = numeric.identity(4);
 let Qhalf = numeric.identity(4);
 
 export const bases = [
@@ -71,7 +72,7 @@ export function parseBases() {
     let atoms = [];
     for (let j = 1; j < lines.length-1; j++) {
       let atom = {};
-      atom.name = lines[j].charAt(13) + lines[j].charAt(14) + (lines[j].charAt(15) !== ' ' ? lines[j].charAt(15): '');
+      atom.name = lines[j].charAt(13) + (lines[j].charAt(14) !== ' ' ? lines[j].charAt(14): '') + (lines[j].charAt(15) !== ' ' ? lines[j].charAt(15): '');
       atom.x = parseFloat(lines[j].substring(30, 38));
       atom.y = parseFloat(lines[j].substring(38, 46));
       atom.z = parseFloat(lines[j].substring(46, 54));
@@ -399,6 +400,15 @@ export function get30Coordinates(ic, step, Ai) {
     // send true to use phoRotation matrix
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
 
+    stepM = calculateFrameMID(ic.slice(12, 18));
+	// let's get the mid-frame
+    stepM[0][3] = stepM[0][3] / 2.0;
+    stepM[1][3] = stepM[1][3] / 2.0;
+    stepM[2][3] = stepM[2][3] / 2.0;
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+      stepM[i][j] = Qhalf[i][j];
+    }
+
     A = numeric.dot(numeric.identity(4), calculateFrameMID(ic.slice(12, 18)));
 
     bfra = calculateFrame(ic.slice(24, 30));
@@ -483,3 +493,8 @@ export function get30Coordinates(ic, step, Ai) {
     return result;
 //    return [W1, C1, W2, C2, P1, P2];  // from before
 }
+
+export function getMidBasis() {
+    return stepM;
+}
+

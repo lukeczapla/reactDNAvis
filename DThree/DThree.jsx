@@ -19,6 +19,7 @@ class DThree extends Component {
       lastTranslateX: 0,
       lastTranslateY: 0,
       evalue: '',
+      midVal: '',
       mean: props.mean,
       cov: props.cov,
       tetramer: props.tetramer,
@@ -108,13 +109,24 @@ class DThree extends Component {
     }
     avgx /= points.length; avgy /= points.length; avgz /= points.length;
     let spheres = [];
+    let val = '';
     points.forEach((atom) => {
       //  console.log(atom);
-        let geometry = new trois.SphereGeometry(1.2, 10, 10, 10);
+        let geometry = new trois.SphereGeometry(1.4, 10, 10, 10);
         let color = 0xAA00AA;
         if (atom.name.charAt(0) === 'O') color = 0xCC0000;
         if (atom.name.charAt(0) === 'C') color = 0x777777;
         if (atom.name.charAt(0) === 'N') color = 0x0000CC;
+
+	if (atom.name === 'P') {
+		let px = atom.x - ref.getMidBasis()[0][3];
+		let py = atom.y - ref.getMidBasis()[1][3];
+		let pz = atom.z - ref.getMidBasis()[2][3];
+		let pxx = px*ref.getMidBasis()[0][0] + py*ref.getMidBasis()[1][0] + pz*ref.getMidBasis()[2][0];
+                let pyy = px*ref.getMidBasis()[0][1] + py*ref.getMidBasis()[1][1] + pz*ref.getMidBasis()[2][1];
+                let pzz = px*ref.getMidBasis()[0][2] + py*ref.getMidBasis()[1][2] + pz*ref.getMidBasis()[2][2];
+		val += pxx + ", " + pyy + ", " + pzz + " ... ";
+	}
 
         let material = new trois.MeshLambertMaterial({color: color});
         let sphere = new trois.Mesh(geometry, material);
@@ -122,6 +134,7 @@ class DThree extends Component {
         this.scene.add(sphere);
         spheres.push(sphere);
     });
+    this.setState({ midVal: val });
     const light1 = new trois.PointLight( 0xffffff, 5, 200 );
     light1.position.set(0, 0, 50);
     this.scene.add(light1);
@@ -140,8 +153,8 @@ class DThree extends Component {
     let x = 0;
     let dir = 1;
     const animate = () => {
-      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(modeN)]);
-      let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(modeN)]));
+      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
+      let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(this.state.modeNum)]));
       let points = ref.get30Coordinates(icnew, this.state.tetramer);
       let i = 0;
       points.forEach((atom) => {
@@ -196,7 +209,7 @@ class DThree extends Component {
         : null}
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}</>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}{this.state.midVal}</>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

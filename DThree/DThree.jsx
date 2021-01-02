@@ -4,6 +4,7 @@ import * as trois from 'three';
 import numeric from 'numeric';
 import Eigenvector from './Eigenvector.jsx';
 import * as ref from './References.jsx';
+import * as ref3 from './References3DNA.jsx';
 
 class DThree extends Component {
 
@@ -209,7 +210,7 @@ class DThree extends Component {
         : null}
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}{this.state.midVal}</>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}</>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

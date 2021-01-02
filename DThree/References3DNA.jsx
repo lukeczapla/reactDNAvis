@@ -1,4 +1,4 @@
-
+import numeric from 'numeric';
 
 export const bases = [
             "SEQRES   1 A    1  A\n" +
@@ -87,7 +87,7 @@ export function calculatetp(A) {
 
     sgcp = A[1][1]*A[0][2]-A[0][1]*A[1][2];
 
-    if (gamma == 0.0) omega = -Math.atan2(A[0][1],A[1][1]);
+    if (gamma === 0.0) omega = -Math.atan2(A[0][1],A[1][1]);
     else omega = Math.atan2(A[2][1]*A[0][2]+sgcp*A[1][2],sgcp*A[0][2]-A[2][1]*A[1][2]);
 
     omega2_minus_phi = Math.atan2(A[1][2],A[0][2]);
@@ -320,4 +320,258 @@ export function jeigen(a) {
 
 }
 
+function centroid(vec) {
+	let x = 0.0, y = 0.0, z = 0.0;
+	for (let i = 0; i < vec.length; i++) {
+		x += vec[i][0];
+		y += vec[i][1];
+		z += vec[i][2];
+	}
+	return [x/vec.length, y/vec.length, z/vec.length];
+}
+
+// copy 2D array
+function clone(vec) {
+	let result = [];
+	result.length = vec.length;
+	for (let i = 0; i < vec.length; i++) {
+	  let arr = [];
+	  for (let j = 0; j < vec[i].length; j++) {
+	    arr.push(vec[i][j]);
+	  }
+	  result[i] = arr;
+	}
+	return result;
+}
+
+function translate(val, points) {
+  for (let i = 0; i < points.length; i++) {
+  	points[i][0] += val[0];
+  	points[i][1] += val[1];
+  	points[i][2] += val[2];
+  }
+}
+
+function superposition(fixed, moved) {
+	let cena = centroid(fixed);
+	let cenb = centroid(moved);
+	console.log(fixed);
+	console.log(moved);
+	cena[0] = -cena[0]; cena[1] = -cena[1]; cena[2] = -cena[2];
+	cenb[0] = -cenb[0]; cenb[1] = -cenb[1]; cenb[2] = -cenb[2];
+    let a = clone(fixed);
+    translate(cena, a);
+    let b = clone(moved);
+    translate(cenb, b);
+    console.log(a);
+    console.log(b);
+    let corr = numeric.dot(numeric.transpose(b), a);
+    let svd = numeric.svd(corr);
+    let u = clone(svd.U);
+    let u_trans = numeric.transpose(u);
+    let vt = clone(svd.V);
+    let vt_orig = clone(svd.V);
+    let rot_notrans = numeric.dot(vt, u_trans);
+    let rot = numeric.transpose(rot_notrans)
+    let det = numeric.det(rot);
+    let cb_tmp;
+    if (det < 0) {
+    	vt = vt_orig;
+    	vt[2][0] = -vt[2][0];
+    	vt[2][1] = -vt[2][1];
+    	vt[2][2] = -vt[2][2];
+		cb_tmp = numeric.transpose(vt);
+		rot_notrans = numeric.dot(cb_tmp, u_trans);
+		rot = numeric.transpose(rot_notrans);
+    }
+    
+    cb_tmp = numeric.dot([cenb], rot);
+    let trans = [cena[0] - cb_tmp[0][0], cena[1]-cb_tmp[0][1], cena[2] - cb_tmp[0][2]];
+    console.log(rot);
+    console.log(trans);
+    let result = [];
+    result.length = 4;
+    result[0] = [rot[0][0], rot[0][1], rot[0][2], trans[0]];
+    result[1] = [rot[1][0], rot[1][1], rot[1][2], trans[1]];
+    result[2] = [rot[2][0], rot[2][1], rot[2][2], trans[2]];
+    result[3] = [0.0, 0.0, 0.0, 1.0];
+    return result;
+}
+
+export function fitFrames(x) {
+	let atoms = x.atoms;
+	if (atoms.length === 0) return;
+	let letters = x.letters;
+	let bases = parseBases();
+	console.log(bases);
+	let W1 = [], W2 = [], C1 = [], C2 = [];
+	let rW1 = [], rW2 = [], rC1 = [], rC2 = [];
+	console.log(atoms[0].length);
+	console.log(bases[letters[0]].length);
+	for (let i = 0; i < atoms[0].length; i++) {
+		for (let j = 0; j < bases[letters[0]].length; j++) {
+		  if (atoms[0][i].name === bases[letters[0]][j].name) {
+ 		    W1.push([atoms[0][i].x, atoms[0][i].y, atoms[0][i].z]);
+		    rW1.push([bases[letters[0]][j].x, bases[letters[0]][j].y, bases[letters[0]][j].z])
+		  }
+		} 
+	}
+	for (let i = 0; i < atoms[1].length; i++) {
+		for (let j = 0; j < bases[letters[1]].length; j++) {
+		  if (atoms[1][i].name === bases[letters[1]][j].name) {
+ 		    C1.push([atoms[1][i].x, atoms[1][i].y, atoms[1][i].z]);
+		    rC1.push([bases[letters[1]][j].x, bases[letters[1]][j].y, bases[letters[1]][j].z])
+		  }
+		} 
+	}
+
+	for (let i = 0; i < atoms[2].length; i++) {
+		for (let j = 0; j < bases[letters[2]].length; j++) {
+		  if (atoms[2][i].name === bases[letters[2]][j].name) {
+ 		    W2.push([atoms[2][i].x, atoms[2][i].y, atoms[2][i].z]);
+		    rW2.push([bases[letters[2]][j].x, bases[letters[2]][j].y, bases[letters[2]][j].z])
+		  }
+		} 
+	}
+
+	for (let i = 0; i < atoms[3].length; i++) {
+		for (let j = 0; j < bases[letters[3]].length; j++) {
+		  if (atoms[3][i].name === bases[letters[3]][j].name) {
+ 		    C2.push([atoms[3][i].x, atoms[3][i].y, atoms[3][i].z]);
+		    rC2.push([bases[letters[3]][j].x, bases[letters[3]][j].y, bases[letters[3]][j].z])
+		  }
+		} 
+	}
+
+	console.log(W1.length, rW1.length);
+	console.log(W2.length, rW2.length);
+	console.log(C1.length, rC1.length);
+	console.log(rC2.length, rC2.length);
+	let result = [superposition(W1, rW1), superposition(C1, rC1), superposition(W2, rW2), superposition(C2, rC2)];
+    console.log(result);
+    return result;
+	
+}
+
+function setRow(matrix, row, val) {
+	for (let i = 0; i < val.length; i++) {
+		matrix[row][i] = val[i];
+	}
+}
+
+function setColumn(matrix, col, val) {
+	for (let i = 0; i < val.length; i++) {
+		matrix[i][col] = val[i];
+	}
+}
+
+function removeComponent(m1, m2) {
+	let dot = 0.0;
+	let result = [];
+	result.length = m1.length;
+	for (let i = 0; i < m1.length; i++) {
+		dot += m1[i]*m2[i];
+	}
+	for (let i = 0; i < m1.length; i++) {
+		result[i] = m1[i] - dot*m2[i];
+	}
+	
+	let norm = 0.0;
+	
+	for (let i = 0; i < result.length; i++) {
+		norm += m1[i]*m1[i];
+	}
+	norm = Math.sqrt(norm);
+	
+	for (let i = 0; i < result.length; i++) {
+		result[i] /= norm;
+	}
+	
+	return result;
+	
+}
+
+export function getBasePlanes(x) {
+	let frames = fitFrames(x);
+	if (!frames) return;
+	console.log(frames);
+	let ref1 = clone(frames[0]);
+	let ref2 = clone(frames[1]);
+	
+	let temp = clone(ref1);
+	let temp2 = clone(ref1);
+	let y2 = [ref2[0][1], ref2[1][1], ref2[2][1]];
+	let z1 = [ref1[0][2], ref1[1][2], ref1[2][2]];
+	// known as z3 in java code
+	let z2 = [ref2[0][2], ref2[1][2], ref2[2][2]];
+	if (z1[0]*z2[0] + z1[1]*z2[1] + z1[2]*z2[2] < 0.0) {
+		for (let i = 0; i < 3; i++) {
+			y2[i] = -y2[i];
+			z2[i] = -z2[i];
+		}
+		setColumn(ref2, 1, y2);
+		setColumn(ref2, 2, z2);
+	}
+	
+	temp = numeric.add(temp, ref2);
+	temp = numeric.mul(0.5, temp);
+	let x2 = [temp[0][0], temp[1][0], temp[2][0]];
+	y2 = [temp[0][1], temp[1][1], temp[2][1]];
+	z2 = [temp[0][2], temp[1][2], temp[2][2]];
+	x2 = removeComponent(x2, y2);
+	x2 = removeComponent(x2, z2);
+	y2 = removeComponent(y2, z2);
+	z2 = removeComponent(z2, [0,0,0]);
+
+	temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
+	temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
+	temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
+
+	let pairingParameters = calculatetp(numeric.dot(numeric.inv(temp2), ref2));
+	console.log("Pairing Parameters:");
+	console.log(pairingParameters);
+	let result = [0, 0];
+	result[0] = clone(temp);
+	
+	ref1 = clone(frames[2]);
+	ref2 = clone(frames[3]);
+	
+	temp = clone(ref1);
+	temp2 = clone(ref1);
+	y2 = [ref2[0][1], ref2[1][1], ref2[2][1]];
+	// known as z3 in java code
+	z2 = [ref2[0][2], ref2[1][2], ref2[2][2]];
+	z1 = [ref1[0][2], ref1[1][2], ref1[2][2]];
+	if (z1[0]*z2[0] + z1[1]*z2[1] + z1[2]*z2[2] < 0.0) {
+		for (let i = 0; i < 3; i++) {
+			y2[i] = -y2[i];
+			z2[i] = -z2[i];
+		}
+		setColumn(ref2, 1, y2);
+		setColumn(ref2, 2, z2);
+	}
+	
+	temp = numeric.add(temp, ref2);
+	temp = numeric.mul(0.5, temp);
+	console.log(temp);
+	x2 = [temp[0][0], temp[1][0], temp[2][0]];
+	y2 = [temp[0][1], temp[1][1], temp[2][1]];
+	z2 = [temp[0][2], temp[1][2], temp[2][2]];
+	x2 = removeComponent(x2, y2);
+	x2 = removeComponent(x2, z2);
+	y2 = removeComponent(y2, z2);
+	z2 = removeComponent(z2, [0,0,0]);
+	
+	temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
+	temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
+	temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
+
+	pairingParameters = calculatetp(numeric.dot(numeric.inv(temp2), ref2));
+	console.log("Pairing Parameters:");
+	console.log(pairingParameters);
+	result[1] = clone(temp);	
+	
+	return result;
+
+}
 

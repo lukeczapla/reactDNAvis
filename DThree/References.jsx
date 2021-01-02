@@ -2,6 +2,8 @@ import numeric from 'numeric';
 
 let stepM = numeric.identity(4);
 let Qhalf = numeric.identity(4);
+let bletters = [];
+let values = [];
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
@@ -132,11 +134,11 @@ function calculateFrameMID(ic, isphosphate = false) {
                            [0.81639941, 0.57748763, 0.0, 0.0],
                            [0.0, 0.0, 0.0, 1.0]];
     result = numeric.dot(result, numeric.inv(p__rot));
+
     result[0][3] = v[0][0];
     result[1][3] = v[0][1];
     result[2][3] = v[0][2];
-//    console.log(ic);
-//    console.log(result);
+
     return result;
   }
 
@@ -278,13 +280,12 @@ export function jeigen(a) {
   }
 
   for (i = 0; i < 500; i++) {
-    //  x.writematrix(stdout);
+
     sm = 0.0;
     for(ip=0; ip < a.length-1; ip++)
       for (iq=ip+1; iq < a.length; iq++) sm += Math.abs(x[ip][iq]);
     if (sm === 0.0) {
        let result = {eigenvectors: v, eigenvalues: d};
-       //console.log(JSON.stringify(result));
        return result;
     }
 
@@ -400,7 +401,7 @@ export function get30Coordinates(ic, step, Ai) {
     // send true to use phoRotation matrix
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
 
-    stepM = calculateFrameMID(ic.slice(12, 18));
+    stepM = calculateFrame(ic.slice(12, 18));
 	// let's get the mid-frame
     stepM[0][3] = stepM[0][3] / 2.0;
     stepM[1][3] = stepM[1][3] / 2.0;
@@ -409,7 +410,7 @@ export function get30Coordinates(ic, step, Ai) {
       stepM[i][j] = Qhalf[i][j];
     }
 
-    A = numeric.dot(numeric.identity(4), calculateFrameMID(ic.slice(12, 18)));
+    A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
 
     bfra = calculateFrame(ic.slice(24, 30));
     bfra[0][3] = bfra[0][3] / 2.0;
@@ -425,20 +426,8 @@ export function get30Coordinates(ic, step, Ai) {
     crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
 
 
-  //  watson2[0][1] *= -1; watson2[1][1] *= -1; watson2[2][1] *= -1; watson2[0][2] *= -1; watson2[1][2] *= -1; watson2[2][2] *= -1;
     let phoW = numeric.dot(watson2, calculateFrame(ic.slice(18, 24), true));
- //watson2[0][1] *= -1; watson2[1][1] *= -1; watson2[2][1] *= -1; watson2[0][2] *= -1; watson2[1][2] *= -1; watson2[2][2] *= -1;
-//    crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
-// THOUGHT WE NEEDED THIS:
 
-
-//    console.log(watson);
-//    console.log(crick);
-//    console.log(A);
-//    console.log(watson2);
-//    console.log(crick2);
-//    console.log(phoC);
-//    console.log(phoW);
 
     let strW1 = step[1];
     let strW2 = step[2];
@@ -468,6 +457,8 @@ export function get30Coordinates(ic, step, Ai) {
     let result = [];
     //let refs = [watson, crick, watson2, crick2, phoC, phoW];
     //console.log(refs);
+    values = [];
+    bletters = [strW1, strC1, strW2, strC2, "pho", "pho"];
     [W1, C1, W2, C2, P1, P2].forEach(function(element) {
         let ref = [];
         if (current === 1) ref = watson;
@@ -477,6 +468,7 @@ export function get30Coordinates(ic, step, Ai) {
         if (current === 5) ref = phoC;
         if (current === 6) ref = phoW;
       //  console.log(ref);
+	let set = [];
         for (let i = 0; i < element.length; i++) {
             let toAdd = {...element[i]};
             let valx = toAdd.x;
@@ -486,12 +478,21 @@ export function get30Coordinates(ic, step, Ai) {
             toAdd.y = ref[1][3]+ref[1][0]*valx+ref[1][1]*valy+ref[1][2]*valz;
             toAdd.z = ref[2][3]+ref[2][0]*valx+ref[2][1]*valy+ref[2][2]*valz;
             result.push(toAdd);
+	     	set.push(toAdd);
             //console.log(element[i].z);
         }
+		values.push(set);
         current++;
     });
     return result;
 //    return [W1, C1, W2, C2, P1, P2];  // from before
+}
+
+export function getAtomSets() {
+    return {
+      atoms: values,
+      letters: bletters
+    };
 }
 
 export function getMidBasis() {

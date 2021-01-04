@@ -2,42 +2,42 @@ import numeric from 'numeric';
 
 export const bases = [
             "SEQRES   1 A    1  A\n" +
-                    "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
-                    "ATOM      3  C8    A A   1       0.024   4.897   0.000\n" +
-                    "ATOM      4  N7    A A   1       0.877   3.902   0.000\n" +
-                    "ATOM      5  C5    A A   1       0.071   2.771   0.000\n" +
-                    "ATOM      6  C6    A A   1       0.369   1.398   0.000\n" +
-                    "ATOM      8  N1    A A   1      -0.668   0.532   0.000\n" +
-                    "ATOM      9  C2    A A   1      -1.912   1.023   0.000\n" +
-                    "ATOM     10  N3    A A   1      -2.320   2.290   0.000\n" +
-                    "ATOM     11  C4    A A   1      -1.267   3.124   0.000\n" +
+                    "ATOM      2  N9    A A   1      -1.291   4.498   0.001\n" +
+                    "ATOM      3  C8    A A   1       0.024   4.897  -0.001\n" +
+                    "ATOM      4  N7    A A   1       0.877   3.902   0.001\n" +
+                    "ATOM      5  C5    A A   1       0.071   2.771  -0.001\n" +
+                    "ATOM      6  C6    A A   1       0.369   1.398   0.001\n" +
+                    "ATOM      8  N1    A A   1      -0.668   0.532  -0.001\n" +
+                    "ATOM      9  C2    A A   1      -1.912   1.023   0.002\n" +
+                    "ATOM     10  N3    A A   1      -2.320   2.290  -0.001\n" +
+                    "ATOM     11  C4    A A   1      -1.267   3.124   0.001\n" +
                     "END",
             "SEQRES   1 A    1  G\n" +
-                    "ATOM      2  N9    G A   1      -1.289   4.551   0.000\n" +
-                    "ATOM      3  C8    G A   1       0.023   4.962   0.000\n" +
-                    "ATOM      4  N7    G A   1       0.870   3.969   0.000\n" +
-                    "ATOM      5  C5    G A   1       0.071   2.833   0.000\n" +
-                    "ATOM      6  C6    G A   1       0.424   1.460   0.000\n" +
-                    "ATOM      8  N1    G A   1      -0.700   0.641   0.000\n" +
-                    "ATOM      9  C2    G A   1      -1.999   1.087   0.000\n" +
-                    "ATOM     11  N3    G A   1      -2.342   2.364   0.001\n" +
-                    "ATOM     12  C4    G A   1      -1.265   3.177   0.000\n" +
+                    "ATOM      2  N9    G A   1      -1.289   4.551   0.001\n" +
+                    "ATOM      3  C8    G A   1       0.023   4.962   0.002\n" +
+                    "ATOM      4  N7    G A   1       0.870   3.969  -0.001\n" +
+                    "ATOM      5  C5    G A   1       0.071   2.833   0.002\n" +
+                    "ATOM      6  C6    G A   1       0.424   1.460  -0.001\n" +
+                    "ATOM      8  N1    G A   1      -0.700   0.641   0.002\n" +
+                    "ATOM      9  C2    G A   1      -1.999   1.087  -0.001\n" +
+                    "ATOM     11  N3    G A   1      -2.342   2.364   0.002\n" +
+                    "ATOM     12  C4    G A   1      -1.265   3.177  -0.001\n" +
                     "END",
             "SEQRES   1 A    1  T\n" +
-                    "ATOM      2  N1    T A   1      -1.284   4.500   0.000\n" +
-                    "ATOM      3  C2    T A   1      -1.462   3.135   0.000\n" +
-                    "ATOM      5  N3    T A   1      -0.298   2.407   0.000\n" +
-                    "ATOM      6  C4    T A   1       0.994   2.897   0.000\n" +
-                    "ATOM      8  C5    T A   1       1.106   4.338   0.000\n" +
-                    "ATOM     10  C6    T A   1      -0.024   5.057   0.000\n" +
+                    "ATOM      2  N1    T A   1      -1.284   4.500  -0.001\n" +
+                    "ATOM      3  C2    T A   1      -1.462   3.135   0.002\n" +
+                    "ATOM      5  N3    T A   1      -0.298   2.407  -0.001\n" +
+                    "ATOM      6  C4    T A   1       0.994   2.897   0.002\n" +
+                    "ATOM      8  C5    T A   1       1.106   4.338  -0.001\n" +
+                    "ATOM     10  C6    T A   1      -0.024   5.057   0.002\n" +
                     "END",
             "SEQRES   1 A    1  C\n" +
-                    "ATOM      2  N1    C A   1      -1.285   4.542   0.000\n" +
-                    "ATOM      3  C2    C A   1      -1.472   3.158   0.000\n" +
-                    "ATOM      5  N3    C A   1      -0.391   2.344   0.000\n" +
-                    "ATOM      6  C4    C A   1       0.837   2.868   0.000\n" +
-                    "ATOM      8  C5    C A   1       1.056   4.275   0.000\n" +
-                    "ATOM      9  C6    C A   1      -0.023   5.068   0.000\n" +
+                    "ATOM      2  N1    C A   1      -1.285   4.542   0.001\n" +
+                    "ATOM      3  C2    C A   1      -1.472   3.158   0.002\n" +
+                    "ATOM      5  N3    C A   1      -0.391   2.344   0.001\n" +
+                    "ATOM      6  C4    C A   1       0.837   2.868   0.002\n" +
+                    "ATOM      8  C5    C A   1       1.056   4.275   0.001\n" +
+                    "ATOM      9  C6    C A   1      -0.023   5.068   0.001\n" +
                     "END",
             "SEQRES   1 A    1  U\n" +
                     "ATOM      2  N1    U A   1      -1.284   4.500   0.000\n" +
@@ -355,8 +355,6 @@ function translate(val, points) {
 function superposition(fixed, moved) {
 	let cena = centroid(fixed);
 	let cenb = centroid(moved);
-	console.log(fixed);
-	console.log(moved);
 	cena[0] = -cena[0]; cena[1] = -cena[1]; cena[2] = -cena[2];
 	cenb[0] = -cenb[0]; cenb[1] = -cenb[1]; cenb[2] = -cenb[2];
     let a = clone(fixed);
@@ -366,6 +364,7 @@ function superposition(fixed, moved) {
     console.log(a);
     console.log(b);
     let corr = numeric.dot(numeric.transpose(b), a);
+	console.log(corr);
     let svd = numeric.svd(corr);
     let u = clone(svd.U);
     let u_trans = numeric.transpose(u);
@@ -375,7 +374,10 @@ function superposition(fixed, moved) {
     let rot = numeric.transpose(rot_notrans)
     let det = numeric.det(rot);
     let cb_tmp;
+	console.log(rot);
+    console.log(det);
     if (det < 0) {
+    	console.log("det < 0");
     	vt = vt_orig;
     	vt[2][0] = -vt[2][0];
     	vt[2][1] = -vt[2][1];
@@ -416,15 +418,6 @@ export function fitFrames(x) {
 		  }
 		} 
 	}
-	for (let i = 0; i < atoms[1].length; i++) {
-		for (let j = 0; j < bases[letters[1]].length; j++) {
-		  if (atoms[1][i].name === bases[letters[1]][j].name) {
- 		    C1.push([atoms[1][i].x, atoms[1][i].y, atoms[1][i].z]);
-		    rC1.push([bases[letters[1]][j].x, bases[letters[1]][j].y, bases[letters[1]][j].z])
-		  }
-		} 
-	}
-
 	for (let i = 0; i < atoms[2].length; i++) {
 		for (let j = 0; j < bases[letters[2]].length; j++) {
 		  if (atoms[2][i].name === bases[letters[2]][j].name) {
@@ -439,6 +432,15 @@ export function fitFrames(x) {
 		  if (atoms[3][i].name === bases[letters[3]][j].name) {
  		    C2.push([atoms[3][i].x, atoms[3][i].y, atoms[3][i].z]);
 		    rC2.push([bases[letters[3]][j].x, bases[letters[3]][j].y, bases[letters[3]][j].z])
+		  }
+		} 
+	}
+
+	for (let i = 0; i < atoms[5].length; i++) {
+		for (let j = 0; j < bases[letters[5]].length; j++) {
+		  if (atoms[5][i].name === bases[letters[5]][j].name) {
+ 		    C1.push([atoms[5][i].x, atoms[5][i].y, atoms[5][i].z]);
+		    rC1.push([bases[letters[5]][j].x, bases[letters[5]][j].y, bases[letters[5]][j].z])
 		  }
 		} 
 	}
@@ -479,7 +481,7 @@ function removeComponent(m1, m2) {
 	let norm = 0.0;
 	
 	for (let i = 0; i < result.length; i++) {
-		norm += m1[i]*m1[i];
+		norm += result[i]*result[i];
 	}
 	norm = Math.sqrt(norm);
 	
@@ -492,6 +494,7 @@ function removeComponent(m1, m2) {
 }
 
 export function getBasePlanes(x) {
+	console.log(x);
 	let frames = fitFrames(x);
 	if (!frames) return;
 	console.log(frames);
@@ -570,8 +573,16 @@ export function getBasePlanes(x) {
 	console.log("Pairing Parameters:");
 	console.log(pairingParameters);
 	result[1] = clone(temp);	
-	
+	console.log(calculatetp(numeric.dot(numeric.inv(result[0]), result[1])));
 	return result;
 
 }
+
+export function testSuperposition() {
+	let points = [[0, 0, 0], [2,0,0], [0,2,0]];
+	let ref = [[0, 0, 2], [0, 2, 2], [2,0,2]];
+	console.log(superposition(points, ref));
+	return(superposition(points, ref));
+}
+
 

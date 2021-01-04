@@ -87,7 +87,7 @@ class DThree extends Component {
     this.setState({evalue: eigen.eigenvalues[parseInt(modeN)],
     eigenvalues: eigen.eigenvalues, eigenvectors: eigen.eigenvectors, eigenlist: eigenlist, modeNum: modeN});
     let demo = this.state.mean;
-    let points = ref.get30Coordinates(demo, this.state.tetramer);
+    let points = ref.get30Coordinates(demo, this.state.tetramer, true);
     console.log(points);
     document.body.style.backgroundColor = "white";
     this.scene = new trois.Scene();
@@ -156,7 +156,7 @@ class DThree extends Component {
     const animate = () => {
       scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
       let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(this.state.modeNum)]));
-      let points = ref.get30Coordinates(icnew, this.state.tetramer);
+      let points = ref.get30Coordinates(icnew, this.state.tetramer, false);
       let i = 0;
       points.forEach((atom) => {
         spheres[i].position.set(atom.x-avgx, atom.y-avgy, atom.z-avgz);
@@ -210,7 +210,7 @@ class DThree extends Component {
         : null}
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}</>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><br/><pre>{ref.writePDB()}</pre><br/><br/>{JSON.stringify(ref3.getBasePlanes(ref.getAtomSets()))}<br/></>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

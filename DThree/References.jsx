@@ -2,8 +2,8 @@ import numeric from 'numeric';
 
 let stepM = numeric.identity(4);
 let Qhalf = numeric.identity(4);
-let bletters = [];
-let values = [];
+let bseq = [];
+let bvalues = [];
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
@@ -57,11 +57,11 @@ export const bases = [
                 "ATOM      9  C6    C A   1      -0.038   5.062   0.001\n" +
                 "END",
         "SEQRES   1 A    1  A\n" +
-                "ATOM      1  P     A A   1       0.000   0.000   0.000\n" +
-                "ATOM      2  O5'   A A   1       0.000  -0.930   1.315\n" +
+		        "ATOM      1  O3'   A A   1       0.000  -0.929  -1.315\n" +
+                "ATOM      2  P     A A   1       0.000   0.000   0.000\n" +
                 "ATOM      3  OP1   A A   1      -1.208   0.854  -0.000\n" +
                 "ATOM      4  OP2   A A   1       1.208   0.854   0.000\n" +
-                "ATOM      5  O3'   A A   1       0.000  -0.929  -1.315\n" +
+                "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
                 "END"
 ];
 
@@ -377,7 +377,7 @@ function complement(s, rna) {
 }
 
 
-export function get30Coordinates(ic, step, Ai) {
+export function get30Coordinates(ic, step, saveState = false) {
 
 //    if (Ai === undefined)
 //      let A = numeric.identity(4);
@@ -457,45 +457,90 @@ export function get30Coordinates(ic, step, Ai) {
     let result = [];
     //let refs = [watson, crick, watson2, crick2, phoC, phoW];
     //console.log(refs);
-    values = [];
-    bletters = [strW1, strC1, strW2, strC2, "pho", "pho"];
-    [W1, C1, W2, C2, P1, P2].forEach(function(element) {
+    let values = [];
+    let bletters = [strW1, "pho", strW2, strC2, "pho", strC1];
+    [W1, P1, W2, C2, P2, C1].forEach(function(element) {
         let ref = [];
         if (current === 1) ref = watson;
-        if (current === 2) ref = crick;
+        if (current === 2) ref = phoW;
         if (current === 3) ref = watson2;
         if (current === 4) ref = crick2;
         if (current === 5) ref = phoC;
-        if (current === 6) ref = phoW;
+        if (current === 6) ref = crick;
       //  console.log(ref);
-	let set = [];
+		let set = [];
         for (let i = 0; i < element.length; i++) {
             let toAdd = {...element[i]};
+            let toPush = {...element[i]};
             let valx = toAdd.x;
             let valy = toAdd.y;
             let valz = toAdd.z;
             toAdd.x = ref[0][3]+ref[0][0]*valx+ref[0][1]*valy+ref[0][2]*valz;
             toAdd.y = ref[1][3]+ref[1][0]*valx+ref[1][1]*valy+ref[1][2]*valz;
             toAdd.z = ref[2][3]+ref[2][0]*valx+ref[2][1]*valy+ref[2][2]*valz;
+            toPush.x = toAdd.x;
+            toPush.y = toAdd.y;
+            toPush.z = toAdd.z;
+
             result.push(toAdd);
-	     	set.push(toAdd);
+	     	set.push(toPush);
             //console.log(element[i].z);
         }
 		values.push(set);
         current++;
     });
+    if (saveState) {
+    	bvalues = values;
+    	bseq = bletters;
+    }
     return result;
 //    return [W1, C1, W2, C2, P1, P2];  // from before
 }
 
 export function getAtomSets() {
     return {
-      atoms: values,
-      letters: bletters
+      atoms: bvalues,
+      letters: bseq
     };
 }
 
 export function getMidBasis() {
     return stepM;
 }
+
+
+function numN(val, N) {
+	let str = ""+val;
+	if (str.length >= N) return str;
+	while (str.length < N) str = " " + str;
+	return str;
+}
+
+function numN2(val, N) {
+	let str = ""+val;
+	if (str.length >= N) return str;
+	while (str.length < N) str = str + " ";
+	return str;
+}
+
+export function writePDB() {
+	let data = getAtomSets();
+	let letters = data.letters;
+	let line = "ATOM      1  P     A A   1       0.000   0.000   0.000 ";
+	let atom = 1;
+	let result = "";
+	Object.keys(data.atoms).forEach((key, index) => {
+		//if (index >= 4) return;
+		for (let i = 0; i < data.atoms[key].length; i++) {
+		  let res = index+1;
+		  if (index >= 2) res--;
+		  if (index >= 5) res--;
+		  let line = "ATOM  " + numN(atom, 5) + "  " + numN2(data.atoms[key][i].name, 3) + "   " + letters[key].charAt(0) + " " + (index < 2 ? "A": "B") + "   " + res + "     " + numN(data.atoms[key][i].x.toFixed(3), 7) + " " + numN(data.atoms[key][i].y.toFixed(3), 7) + " " + numN(data.atoms[key][i].z.toFixed(3), 7) + " ";
+		  atom++;
+		  result += line + "\n";
+		 }
+	});
+	return result;
+}
+
 

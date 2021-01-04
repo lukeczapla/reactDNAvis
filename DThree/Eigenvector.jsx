@@ -34,7 +34,7 @@ class Eigenvector extends Component {
         <td>Pair 2</td>
         {values.pair1.map((element) => (<td key={element}>{element}</td>))}
 	</tr>
-	</tbody></table>{this.props.vector.reduce((acc, value) => acc+value**2,0)}</>
+	</tbody></table>{"Norm = " + Math.sqrt(this.props.vector.reduce((acc, value) => acc+value**2,0))}</>
 		);
 
 	}

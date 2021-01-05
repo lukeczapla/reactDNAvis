@@ -210,7 +210,7 @@ class DThree extends Component {
         : null}
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><br/><pre>{ref.writePDB()}</pre><br/><br/>{JSON.stringify(ref3.getBasePlanes(ref.getAtomSets()))}<br/></>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><br/><pre>{ref.writePDB()}</pre><br/><br/></>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

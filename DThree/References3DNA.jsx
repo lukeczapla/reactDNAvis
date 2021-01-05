@@ -8,36 +8,36 @@ export const bases = [
                     "ATOM      5  C5    A A   1       0.071   2.771  -0.001\n" +
                     "ATOM      6  C6    A A   1       0.369   1.398   0.001\n" +
                     "ATOM      8  N1    A A   1      -0.668   0.532  -0.001\n" +
-                    "ATOM      9  C2    A A   1      -1.912   1.023   0.002\n" +
+                    "ATOM      9  C2    A A   1      -1.912   1.023   0.001\n" +
                     "ATOM     10  N3    A A   1      -2.320   2.290  -0.001\n" +
                     "ATOM     11  C4    A A   1      -1.267   3.124   0.001\n" +
                     "END",
             "SEQRES   1 A    1  G\n" +
                     "ATOM      2  N9    G A   1      -1.289   4.551   0.001\n" +
-                    "ATOM      3  C8    G A   1       0.023   4.962   0.002\n" +
+                    "ATOM      3  C8    G A   1       0.023   4.962   0.001\n" +
                     "ATOM      4  N7    G A   1       0.870   3.969  -0.001\n" +
-                    "ATOM      5  C5    G A   1       0.071   2.833   0.002\n" +
+                    "ATOM      5  C5    G A   1       0.071   2.833   0.001\n" +
                     "ATOM      6  C6    G A   1       0.424   1.460  -0.001\n" +
-                    "ATOM      8  N1    G A   1      -0.700   0.641   0.002\n" +
+                    "ATOM      8  N1    G A   1      -0.700   0.641   0.001\n" +
                     "ATOM      9  C2    G A   1      -1.999   1.087  -0.001\n" +
-                    "ATOM     11  N3    G A   1      -2.342   2.364   0.002\n" +
+                    "ATOM     11  N3    G A   1      -2.342   2.364   0.001\n" +
                     "ATOM     12  C4    G A   1      -1.265   3.177  -0.001\n" +
                     "END",
             "SEQRES   1 A    1  T\n" +
                     "ATOM      2  N1    T A   1      -1.284   4.500  -0.001\n" +
-                    "ATOM      3  C2    T A   1      -1.462   3.135   0.002\n" +
+                    "ATOM      3  C2    T A   1      -1.462   3.135   0.001\n" +
                     "ATOM      5  N3    T A   1      -0.298   2.407  -0.001\n" +
-                    "ATOM      6  C4    T A   1       0.994   2.897   0.002\n" +
+                    "ATOM      6  C4    T A   1       0.994   2.897   0.001\n" +
                     "ATOM      8  C5    T A   1       1.106   4.338  -0.001\n" +
-                    "ATOM     10  C6    T A   1      -0.024   5.057   0.002\n" +
+                    "ATOM     10  C6    T A   1      -0.024   5.057   0.001\n" +
                     "END",
             "SEQRES   1 A    1  C\n" +
                     "ATOM      2  N1    C A   1      -1.285   4.542   0.001\n" +
-                    "ATOM      3  C2    C A   1      -1.472   3.158   0.002\n" +
+                    "ATOM      3  C2    C A   1      -1.472   3.158  -0.001\n" +
                     "ATOM      5  N3    C A   1      -0.391   2.344   0.001\n" +
-                    "ATOM      6  C4    C A   1       0.837   2.868   0.002\n" +
+                    "ATOM      6  C4    C A   1       0.837   2.868  -0.001\n" +
                     "ATOM      8  C5    C A   1       1.056   4.275   0.001\n" +
-                    "ATOM      9  C6    C A   1      -0.023   5.068   0.001\n" +
+                    "ATOM      9  C6    C A   1      -0.023   5.068  -0.001\n" +
                     "END",
             "SEQRES   1 A    1  U\n" +
                     "ATOM      2  N1    U A   1      -1.284   4.500   0.000\n" +
@@ -335,11 +335,11 @@ function clone(vec) {
 	let result = [];
 	result.length = vec.length;
 	for (let i = 0; i < vec.length; i++) {
-	  let arr = [];
+	  result[i] = [];
+	  result[i].length = vec[i].length;
 	  for (let j = 0; j < vec[i].length; j++) {
-	    arr.push(vec[i][j]);
+	    result[i][j] = vec[i][j];
 	  }
-	  result[i] = arr;
 	}
 	return result;
 }
@@ -405,16 +405,18 @@ export function fitFrames(x) {
 	if (atoms.length === 0) return;
 	let letters = x.letters;
 	let bases = parseBases();
+	console.log(letters);
 	console.log(bases);
 	let W1 = [], W2 = [], C1 = [], C2 = [];
 	let rW1 = [], rW2 = [], rC1 = [], rC2 = [];
 	console.log(atoms[0].length);
 	console.log(bases[letters[0]].length);
+	console.log(letters[0] + letters[2] + letters[3] + letters[5]);
 	for (let i = 0; i < atoms[0].length; i++) {
 		for (let j = 0; j < bases[letters[0]].length; j++) {
 		  if (atoms[0][i].name === bases[letters[0]][j].name) {
  		    W1.push([atoms[0][i].x, atoms[0][i].y, atoms[0][i].z]);
-		    rW1.push([bases[letters[0]][j].x, bases[letters[0]][j].y, bases[letters[0]][j].z])
+		    rW1.push([bases[letters[0]][j].x, bases[letters[0]][j].y, bases[letters[0]][j].z]);
 		  }
 		} 
 	}
@@ -422,7 +424,7 @@ export function fitFrames(x) {
 		for (let j = 0; j < bases[letters[2]].length; j++) {
 		  if (atoms[2][i].name === bases[letters[2]][j].name) {
  		    W2.push([atoms[2][i].x, atoms[2][i].y, atoms[2][i].z]);
-		    rW2.push([bases[letters[2]][j].x, bases[letters[2]][j].y, bases[letters[2]][j].z])
+		    rW2.push([bases[letters[2]][j].x, bases[letters[2]][j].y, bases[letters[2]][j].z]);
 		  }
 		} 
 	}
@@ -431,7 +433,7 @@ export function fitFrames(x) {
 		for (let j = 0; j < bases[letters[3]].length; j++) {
 		  if (atoms[3][i].name === bases[letters[3]][j].name) {
  		    C2.push([atoms[3][i].x, atoms[3][i].y, atoms[3][i].z]);
-		    rC2.push([bases[letters[3]][j].x, bases[letters[3]][j].y, bases[letters[3]][j].z])
+		    rC2.push([bases[letters[3]][j].x, bases[letters[3]][j].y, bases[letters[3]][j].z]);
 		  }
 		} 
 	}
@@ -440,7 +442,7 @@ export function fitFrames(x) {
 		for (let j = 0; j < bases[letters[5]].length; j++) {
 		  if (atoms[5][i].name === bases[letters[5]][j].name) {
  		    C1.push([atoms[5][i].x, atoms[5][i].y, atoms[5][i].z]);
-		    rC1.push([bases[letters[5]][j].x, bases[letters[5]][j].y, bases[letters[5]][j].z])
+		    rC1.push([bases[letters[5]][j].x, bases[letters[5]][j].y, bases[letters[5]][j].z]);
 		  }
 		} 
 	}
@@ -583,6 +585,23 @@ export function testSuperposition() {
 	let ref = [[0, 0, 2], [0, 2, 2], [2,0,2]];
 	console.log(superposition(points, ref));
 	return(superposition(points, ref));
+}
+
+export function midFrame(P, A1, A2) {
+	let A = numeric.dot(numeric.inv(A1), A2);
+	let steps = calculatetp(A);
+	let basis = calculateM(steps);
+	
+	let x_p = P[0] - basis[0][3];
+	let y_p = P[1] - basis[1][3];
+	let z_p = P[2] - basis[2][3];
+	
+	let xp = x_p * basis[0][0] + y_p * basis[1][0] + z_p * basis[2][0];
+	let yp = x_p * basis[0][1] + y_p * basis[1][1] + z_p * basis[2][1];
+	let zp = x_p * basis[0][2] + y_p * basis[1][2] + z_p * basis[2][2];
+
+	
+	return [xp, yp, zp];
 }
 
 

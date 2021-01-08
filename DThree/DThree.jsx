@@ -13,6 +13,9 @@ class DThree extends Component {
     this.state = {
       modeNum : '0',
       isDragging: false,
+      useScale: true,
+      phoW: [0,0,0],
+      phoC: [0,0,0],
       startX: 0,
       startY: 0,
       translateX: 0,
@@ -88,6 +91,23 @@ class DThree extends Component {
     eigenvalues: eigen.eigenvalues, eigenvectors: eigen.eigenvectors, eigenlist: eigenlist, modeNum: modeN});
     let demo = this.state.mean;
     let points = ref.get30Coordinates(demo, this.state.tetramer, true);
+    let PhoW = ref.getAtomSets().atoms[1][1];
+    let PhoC = ref.getAtomSets().atoms[4][1];
+    ref3.getBasePlanes(ref.getAtomSets());
+    let midframe = ref3.getMidFrame();
+    let px = PhoW.x - midframe[0][3];
+    let py = PhoW.y - midframe[1][3];
+    let pz = PhoW.z - midframe[2][3];
+	let pw = [px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+			  px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+			  px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]];
+    px = PhoC.x - midframe[0][3];
+    py = PhoC.y - midframe[1][3];
+    pz = PhoC.z - midframe[2][3];	
+    let pc = [px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+			  px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+			  px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]];
+	this.setState({phoW: pw, phoC: pc});
     console.log(points);
     document.body.style.backgroundColor = "white";
     this.scene = new trois.Scene();
@@ -154,7 +174,8 @@ class DThree extends Component {
     let x = 0;
     let dir = 1;
     const animate = () => {
-      scale = 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
+      if (this.state.useScale) scale = 1.0/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]);
+      else scale = 1.0;
       let icnew = numeric.add(demo, numeric.mul(x/50*scale, eigen.eigenvectors[parseInt(this.state.modeNum)]));
       let points = ref.get30Coordinates(icnew, this.state.tetramer, false);
       let i = 0;
@@ -203,14 +224,15 @@ class DThree extends Component {
     let valtitles = ["pair 1", "pho 1", "basestep", "pho 2", "pair 2"];
     let meanvals = [this.state.mean.slice(0,6), this.state.mean.slice(6, 12), this.state.mean.slice(12, 18), this.state.mean.slice(18, 24), this.state.mean.slice(24, 30)];
     return (<>
-        {this.state.eigenvalues.length > 0 ? <select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
+        {this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
-          ))}</select>
-        : null}
+          ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation</>
+        : null}<br/>
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
+	<b>Phosphates:</b><table><tbody><tr><td>xP {this.state.phoW[0]}</td><td>yP {this.state.phoW[1]}</td><td>zP {this.state.phoW[2]}</td></tr><tr><td>xP {this.state.phoC[0]}</td><td>yP {this.state.phoC[1]}</td><td>zP {this.state.phoC[2]}</td></tr></tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><br/><pre>{ref.writePDB()}</pre><br/><br/></>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><pre>{ref.writePDB()}</pre><br/></>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

@@ -7,6 +7,69 @@ let bvalues = [];
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
+                "ATOM      1  C1'   A A   1      -2.479   5.346   0.000\n" +
+                "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
+                "ATOM      3  C8    A A   1       0.024   4.897   0.000\n" +
+                "ATOM      4  N7    A A   1       0.877   3.902   0.000\n" +
+                "ATOM      5  C5    A A   1       0.071   2.771   0.000\n" +
+                "ATOM      6  C6    A A   1       0.369   1.398   0.000\n" +
+                "ATOM      7  N6    A A   1       1.611   0.909   0.000\n" +
+                "ATOM      8  N1    A A   1      -0.668   0.532   0.000\n" +
+                "ATOM      9  C2    A A   1      -1.912   1.023   0.000\n" +
+                "ATOM     10  N3    A A   1      -2.320   2.290   0.000\n" +
+                "ATOM     11  C4    A A   1      -1.267   3.124   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  G\n" +
+                "ATOM      1  C1'   G A   1      -2.477   5.399   0.000\n" +
+                "ATOM      2  N9    G A   1      -1.289   4.551   0.000\n" +
+                "ATOM      3  C8    G A   1       0.023   4.962   0.000\n" +
+                "ATOM      4  N7    G A   1       0.870   3.969   0.000\n" +
+                "ATOM      5  C5    G A   1       0.071   2.833   0.000\n" +
+                "ATOM      6  C6    G A   1       0.424   1.460   0.000\n" +
+                "ATOM      7  O6    G A   1       1.554   0.955   0.000\n" +
+                "ATOM      8  N1    G A   1      -0.700   0.641   0.000\n" +
+                "ATOM      9  C2    G A   1      -1.999   1.087   0.000\n" +
+                "ATOM     10  N2    G A   1      -2.949   0.139  -0.001\n" +
+                "ATOM     11  N3    G A   1      -2.342   2.364   0.001\n" +
+                "ATOM     12  C4    G A   1      -1.265   3.177   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  T\n" +
+                "ATOM      1  C1'   T A   1      -2.481   5.354   0.000\n" +
+                "ATOM      2  N1    T A   1      -1.284   4.500   0.000\n" +
+                "ATOM      3  C2    T A   1      -1.462   3.135   0.000\n" +
+                "ATOM      4  O2    T A   1      -2.562   2.608   0.000\n" +
+                "ATOM      5  N3    T A   1      -0.298   2.407   0.000\n" +
+                "ATOM      6  C4    T A   1       0.994   2.897   0.000\n" +
+                "ATOM      7  O4    T A   1       1.944   2.119   0.000\n" +
+                "ATOM      8  C5    T A   1       1.106   4.338   0.000\n" +
+                "ATOM      9  C7    T A   1       2.466   4.961   0.001\n" +
+                "ATOM     10  C6    T A   1      -0.024   5.057   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  C\n" +
+                "ATOM      1  C1'   C A   1      -2.477   5.402   0.000\n" +
+                "ATOM      2  N1    C A   1      -1.287   4.523   0.000\n" +
+                "ATOM      3  C2    C A   1      -1.477   3.143   0.000\n" +
+                "ATOM      4  O2    C A   1      -2.623   2.684   0.001\n" +
+                "ATOM      5  N3    C A   1      -0.385   2.335   0.000\n" +
+                "ATOM      6  C4    C A   1       0.849   2.855   0.000\n" +
+                "ATOM      7  N4    C A   1       1.883   2.020   0.001\n" +
+                "ATOM      8  C5    C A   1       1.065   4.271   0.000\n" +
+                "ATOM      9  C6    C A   1      -0.038   5.062   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  A\n" +
+		        "ATOM      1  O3'   A A   1       0.000  -0.929  -1.315\n" +
+                "ATOM      2  P     A A   1       0.000   0.000   0.000\n" +
+                "ATOM      3  OP1   A A   1      -1.208   0.854  -0.000\n" +
+                "ATOM      4  OP2   A A   1       1.208   0.854   0.000\n" +
+                "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
+                "END"
+];
+
+// [[0.5886547845133248,-1.195192871809648,0.05471178873466224,0.16861022729204292],[1.195192871809648,0.5895149523134533,0.018790583292016924,-0.004630873850297916],[-0.05471178873466224,0.018790583292016924,0.9991398321998713,1.7129476437285598],[0,0,0,1]]
+
+/*
+export const bases = [
+        "SEQRES   1 A    1  A\n" +
                 "ATOM      1  C1'   A A   1      -2.498   5.390   0.000\n" +
                 "ATOM      2  N9    A A   1      -1.287   4.523   0.000\n" +
                 "ATOM      3  C8    A A   1       0.041   4.887   0.002\n" +
@@ -64,6 +127,7 @@ export const bases = [
                 "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
                 "END"
 ];
+*/
 
 export function parseBases() {
   let letters = ["A", "G", "T", "C", "pho"];
@@ -161,7 +225,8 @@ function calculateFrame(ic, isphosphate = false) {
   // scale the coordinates
   u = numeric.mul(u, 0.5/uscale);
   // calculate skew-symmetric matrix related to u
-  let uvec = numeric.identity(3); uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
+  let uvec = numeric.identity(3);
+  uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
   uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
   uvec = numeric.sub(uvec, numeric.transpose(uvec));
 
@@ -385,6 +450,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 //      let A = Ai;
     let A = numeric.identity(4);
     let bfra = calculateFrame(ic.slice(0, 6)); // first pairing pars
+    if (saveState) console.log(bfra);
     bfra[0][3] = bfra[0][3] / 2.0;
     bfra[1][3] = bfra[1][3] / 2.0;
     bfra[2][3] = bfra[2][3] / 2.0;
@@ -392,6 +458,8 @@ export function get30Coordinates(ic, step, saveState = false) {
       bfra[i][j] = Qhalf[i][j];
     }
     // bfra is now in the middle
+
+    if (saveState) console.log(JSON.stringify(bfra));
 
     let watson = numeric.dot(A, bfra)
     let crick = numeric.dot(A, numeric.inv(bfra));
@@ -401,15 +469,18 @@ export function get30Coordinates(ic, step, saveState = false) {
     // send true to use phoRotation matrix
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
 
-    stepM = calculateFrame(ic.slice(12, 18));
-	// let's get the mid-frame
-    stepM[0][3] = stepM[0][3] / 2.0;
-    stepM[1][3] = stepM[1][3] / 2.0;
-    stepM[2][3] = stepM[2][3] / 2.0;
-    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
-      stepM[i][j] = Qhalf[i][j];
+    // let's get the mid-frame ??
+    if (saveState) {
+      stepM = calculateFrame(ic.slice(12, 18));
+      console.log(JSON.stringify(stepM));
+      stepM[0][3] = stepM[0][3] / 2.0;
+      stepM[1][3] = stepM[1][3] / 2.0;
+      stepM[2][3] = stepM[2][3] / 2.0;
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+        stepM[i][j] = Qhalf[i][j];
+      }
+      console.log(JSON.stringify(stepM));
     }
-
     A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
 
     bfra = calculateFrame(ic.slice(24, 30));
@@ -419,7 +490,7 @@ export function get30Coordinates(ic, step, saveState = false) {
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
     }
-
+    if (saveState) console.log(bfra);
     let watson2 = numeric.dot(A, bfra);
     let crick2 = numeric.dot(A, numeric.inv(bfra));
 
@@ -467,6 +538,7 @@ export function get30Coordinates(ic, step, saveState = false) {
         if (current === 4) ref = crick2;
         if (current === 5) ref = phoC;
         if (current === 6) ref = crick;
+        if (saveState) console.log(JSON.stringify(ref));
       //  console.log(ref);
 		let set = [];
         for (let i = 0; i < element.length; i++) {
@@ -529,13 +601,21 @@ export function writePDB() {
 	let line = "ATOM      1  P     A A   1       0.000   0.000   0.000 ";
 	let atom = 1;
 	let result = "";
+	console.log(letters);
 	Object.keys(data.atoms).forEach((key, index) => {
 		//if (index >= 4) return;
 		for (let i = 0; i < data.atoms[key].length; i++) {
 		  let res = index+1;
 		  if (index >= 2) res--;
 		  if (index >= 5) res--;
-		  let line = "ATOM  " + numN(atom, 5) + "  " + numN2(data.atoms[key][i].name, 3) + "   " + letters[key].charAt(0) + " " + (index < 2 ? "A": "B") + "   " + res + "     " + numN(data.atoms[key][i].x.toFixed(3), 7) + " " + numN(data.atoms[key][i].y.toFixed(3), 7) + " " + numN(data.atoms[key][i].z.toFixed(3), 7) + " ";
+		  let resname = letters[key].charAt(0);
+		  if (index === 1 || index === 4) {
+		    if (data.atoms[key][i].name === "O3'") {
+		      resname = letters[index-1].charAt(0);
+		      res--;
+		    } else resname = letters[index+1].charAt(0);
+		  }
+		  line = "ATOM  " + numN(atom, 5) + "  " + numN2(data.atoms[key][i].name, 3) + "   " + resname + " " + (index < 3 ? "A": "B") + "   " + res + "     " + numN(data.atoms[key][i].x.toFixed(3), 7) + " " + numN(data.atoms[key][i].y.toFixed(3), 7) + " " + numN(data.atoms[key][i].z.toFixed(3), 7) + " ";
 		  atom++;
 		  result += line + "\n";
 		 }

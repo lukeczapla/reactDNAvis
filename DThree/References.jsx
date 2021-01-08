@@ -161,7 +161,7 @@ function calculateFrameMID(ic, isphosphate = false) {
   let u = [[ic[0], ic[1], ic[2]]];
   let v = [[ic[3], ic[4], ic[5]]];
   // scale the coordinates
-  u = numeric.mul(u, 0.5/uscale);
+  u = numeric.mul(u, 0.25/uscale);
   // calculate skew-symmetric matrix related to u
   let uvec = numeric.identity(3); uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
   uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
@@ -181,7 +181,7 @@ function calculateFrameMID(ic, isphosphate = false) {
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) result[i][j] = Q[i][j];
 
   let uhalf = numeric.mul(u, uscale*(2.0/(1.0+Math.sqrt(1.0 + parseFloat(numeric.dot(u, numeric.transpose(u))[0])))));
-  u = numeric.mul(uhalf, 0.5/uscale);
+  u = numeric.mul(uhalf, 0.25/uscale);
 
   uvec = numeric.identity(3);
   uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
@@ -194,9 +194,9 @@ function calculateFrameMID(ic, isphosphate = false) {
 
   if (isphosphate) {
     let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
-                           [-0.50008344, 0.70707284, -0.50010651, 0.0],
-                           [0.81639941, 0.57748763, 0.0, 0.0],
-                           [0.0, 0.0, 0.0, 1.0]];
+                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
+                  [0.81639941, 0.57748763, 0.0, 0.0],
+                  [0.0, 0.0, 0.0, 1.0]];
     result = numeric.dot(result, numeric.inv(p__rot));
 
     result[0][3] = v[0][0];
@@ -260,9 +260,9 @@ function calculateFrame(ic, isphosphate = false) {
 
   if (isphosphate) {
     let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
-                           [-0.50008344, 0.70707284, -0.50010651, 0.0],
-                           [0.81639941, 0.57748763, 0.0, 0.0],
-                           [0.0, 0.0, 0.0, 1.0]];
+                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
+                  [0.81639941, 0.57748763, 0.0, 0.0],
+                  [0.0, 0.0, 0.0, 1.0]];
     result = numeric.dot(result, numeric.inv(p__rot));
     result[0][3] = v[0][0];
     result[1][3] = v[0][1];
@@ -279,7 +279,6 @@ function calculateFrame(ic, isphosphate = false) {
   result[2][3] = q[2][0];
 
   return result;
-
 
 }
 
@@ -382,12 +381,12 @@ export function jeigen(a) {
           d[iq] += h;
 
           x[ip][iq] = 0.0;
-	  for (j = 0; j <= ip-1; j++) {
+	  	  for (j = 0; j <= ip-1; j++) {
             g=x[j][ip];
             h=x[j][iq];
             x[j][ip]=g-s*(h+g*tau);
             x[j][iq]=h+s*(g-h*tau);
-	  }
+	  	  }
           for (j = ip+1; j <= iq-1; j++) {
             g=x[ip][j];
             h=x[j][iq];
@@ -449,7 +448,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 //    else
 //      let A = Ai;
     let A = numeric.identity(4);
-    let bfra = calculateFrame(ic.slice(0, 6)); // first pairing pars
+    let bfra = calculateFrameMID(ic.slice(0, 6)); // first pairing pars
     if (saveState) console.log(bfra);
     bfra[0][3] = bfra[0][3] / 2.0;
     bfra[1][3] = bfra[1][3] / 2.0;
@@ -471,19 +470,19 @@ export function get30Coordinates(ic, step, saveState = false) {
 
     // let's get the mid-frame ??
     if (saveState) {
-      stepM = calculateFrame(ic.slice(12, 18));
-      console.log(JSON.stringify(stepM));
-      stepM[0][3] = stepM[0][3] / 2.0;
-      stepM[1][3] = stepM[1][3] / 2.0;
-      stepM[2][3] = stepM[2][3] / 2.0;
-      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
-        stepM[i][j] = Qhalf[i][j];
-      }
-      console.log(JSON.stringify(stepM));
+    //  stepM = calculateQhalf(ic.slice(12, 18));
+    //  console.log(JSON.stringify(stepM));
+    //  stepM[0][3] = stepM[0][3] / 2.0;
+    //  stepM[1][3] = stepM[1][3] / 2.0;
+    //  stepM[2][3] = stepM[2][3] / 2.0;
+    //  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    //    stepM[i][j] = Qhalf[i][j];
+    //  }
+    //  console.log(JSON.stringify(stepM));
     }
     A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
 
-    bfra = calculateFrame(ic.slice(24, 30));
+    bfra = calculateFrameMID(ic.slice(24, 30));
     bfra[0][3] = bfra[0][3] / 2.0;
     bfra[1][3] = bfra[1][3] / 2.0;
     bfra[2][3] = bfra[2][3] / 2.0;

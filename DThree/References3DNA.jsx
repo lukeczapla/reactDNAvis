@@ -63,7 +63,8 @@ export const bases = [
 
 
 let midFrame = [];
-    
+let pairingParameters1 = [], pairingParameters2 = [], stepParameters = [];
+
 function parseBases() {
   let letters = ["A", "G", "T", "C"];
   let i = 0;
@@ -520,6 +521,7 @@ export function getBasePlanes(x) {
 	let pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	console.log("Pairing Parameters:");
 	console.log(pairingParameters);
+	pairingParameters1 = pairingParameters;
 	let result = [0, 0];
 	result[0] = clone(temp);
 	
@@ -555,8 +557,10 @@ export function getBasePlanes(x) {
 	pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	console.log("Pairing Parameters:");
 	console.log(pairingParameters);
-	result[1] = clone(temp);	
-	let stepParameters = calculatetp(numeric.dot(numeric.inv(result[0]), result[1]));
+	pairingParameters2 = pairingParameters;
+
+	result[1] = clone(temp);
+	stepParameters = calculatetp(numeric.dot(numeric.inv(result[0]), result[1]));
 	console.log("Step Parameters:");
 	console.log(stepParameters);
 	midFrame = calculateM(stepParameters);
@@ -590,6 +594,10 @@ export function midFrameTest(P, A1, A2) {
 
 export function getMidFrame() {
 	return midFrame;
+}
+
+export function getParameters() {
+	return [pairingParameters1, stepParameters, pairingParameters2];
 }
 
 

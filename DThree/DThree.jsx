@@ -14,6 +14,7 @@ class DThree extends Component {
       modeNum : '0',
       isDragging: false,
       useScale: true,
+      parameters3: [],
       phoW: [0,0,0],
       phoC: [0,0,0],
       startX: 0,
@@ -107,7 +108,7 @@ class DThree extends Component {
     let pc = [px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
 			  px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
 			  px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]];
-	this.setState({phoW: pw, phoC: pc});
+	this.setState({phoW: pw, phoC: pc, parameters3: ref3.getParameters()});
     console.log(points);
     document.body.style.backgroundColor = "white";
     this.scene = new trois.Scene();
@@ -221,7 +222,8 @@ class DThree extends Component {
   }
 
   render() {
-    let valtitles = ["pair 1", "pho 1", "basestep", "pho 2", "pair 2"];
+    let valtitles = ["pair 1", "pho W", "bp step", "pho C", "pair 2"];
+    let val3titles = ["pair 1", "bp step", "pair 2"];
     let meanvals = [this.state.mean.slice(0,6), this.state.mean.slice(6, 12), this.state.mean.slice(12, 18), this.state.mean.slice(18, 24), this.state.mean.slice(24, 30)];
     return (<>
         {this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
@@ -232,7 +234,9 @@ class DThree extends Component {
 	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
 	<b>Phosphates:</b><table><tbody><tr><td>xP {this.state.phoW[0]}</td><td>yP {this.state.phoW[1]}</td><td>zP {this.state.phoW[2]}</td></tr><tr><td>xP {this.state.phoC[0]}</td><td>yP {this.state.phoC[1]}</td><td>zP {this.state.phoC[2]}</td></tr></tbody></table>
 	<div ref={ref => (this.mount = ref)}></div>
-	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/><pre>{ref.writePDB()}</pre><br/></>);
+	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>
+	  	<b>3DNA state:</b><table><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0]}</td><td>{value[1]}</td><td>{value[2]}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
+	  <pre>{ref.writePDB()}</pre><br/></>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

@@ -1,5 +1,6 @@
 import numeric from 'numeric';
 
+/*
 export const bases = [
             "SEQRES   1 A    1  A\n" +
                     "ATOM      2  N9    A A   1      -1.291   4.498   0.001\n" +
@@ -13,7 +14,7 @@ export const bases = [
                     "ATOM     11  C4    A A   1      -1.267   3.124   0.001\n" +
                     "END",
             "SEQRES   1 A    1  G\n" +
-                    "ATOM      2  N9    G A   1      -1.289   4.551   0.001\n" +
+                    "ATOM      2  N9    G A   1      -1.289   4.551  -0.001\n" +
                     "ATOM      3  C8    G A   1       0.023   4.962   0.001\n" +
                     "ATOM      4  N7    G A   1       0.870   3.969  -0.001\n" +
                     "ATOM      5  C5    G A   1       0.071   2.833   0.001\n" +
@@ -39,15 +40,78 @@ export const bases = [
                     "ATOM      8  C5    C A   1       1.056   4.275   0.001\n" +
                     "ATOM      9  C6    C A   1      -0.023   5.068  -0.001\n" +
                     "END",
-            "SEQRES   1 A    1  U\n" +
-                    "ATOM      2  N1    U A   1      -1.284   4.500   0.000\n" +
-                    "ATOM      3  C2    U A   1      -1.462   3.131   0.000\n" +
-                    "ATOM      5  N3    U A   1      -0.302   2.397   0.000\n" +
-                    "ATOM      6  C4    U A   1       0.989   2.884   0.000\n" +
-                    "ATOM      8  C5    U A   1       1.089   4.311   0.000\n" +
-                    "ATOM      9  C6    U A   1      -0.024   5.053   0.000\n"
+		    "SEQRES   1 A    1  A\n" +
+				    "ATOM      1  O3'   A A   1       0.000  -0.929  -1.315\n" +
+		            "ATOM      2  P     A A   1       0.000   0.000   0.000\n" +
+		            "ATOM      3  OP1   A A   1      -1.208   0.854  -0.000\n" +
+		            "ATOM      4  OP2   A A   1       1.208   0.854   0.000\n" +
+		            "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
+		            "END"
     ];
+*/
 
+export const bases = [
+        "SEQRES   1 A    1  A\n" +
+             //   "ATOM      1  C1'   A A   1      -2.479   5.346   0.000\n" +
+                "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
+                "ATOM      3  C8    A A   1       0.024   4.897   0.000\n" +
+                "ATOM      4  N7    A A   1       0.877   3.902   0.000\n" +
+                "ATOM      5  C5    A A   1       0.071   2.771   0.000\n" +
+                "ATOM      6  C6    A A   1       0.369   1.398   0.000\n" +
+               // "ATOM      7  N6    A A   1       1.611   0.909   0.000\n" +
+                "ATOM      8  N1    A A   1      -0.668   0.532   0.000\n" +
+                "ATOM      9  C2    A A   1      -1.912   1.023   0.000\n" +
+                "ATOM     10  N3    A A   1      -2.320   2.290   0.000\n" +
+                "ATOM     11  C4    A A   1      -1.267   3.124   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  G\n" +
+              //  "ATOM      1  C1'   G A   1      -2.477   5.399   0.000\n" +
+                "ATOM      2  N9    G A   1      -1.289   4.551   0.000\n" +
+                "ATOM      3  C8    G A   1       0.023   4.962   0.000\n" +
+                "ATOM      4  N7    G A   1       0.870   3.969   0.000\n" +
+                "ATOM      5  C5    G A   1       0.071   2.833   0.000\n" +
+                "ATOM      6  C6    G A   1       0.424   1.460   0.000\n" +
+               // "ATOM      7  O6    G A   1       1.554   0.955   0.000\n" +
+                "ATOM      8  N1    G A   1      -0.700   0.641   0.000\n" +
+                "ATOM      9  C2    G A   1      -1.999   1.087   0.000\n" +
+                "ATOM     10  N2    G A   1      -2.949   0.139  -0.001\n" +
+                "ATOM     11  N3    G A   1      -2.342   2.364   0.001\n" +
+                "ATOM     12  C4    G A   1      -1.265   3.177   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  T\n" +
+             //   "ATOM      1  C1'   T A   1      -2.481   5.354   0.000\n" +
+                "ATOM      2  N1    T A   1      -1.284   4.500   0.000\n" +
+                "ATOM      3  C2    T A   1      -1.462   3.135   0.000\n" +
+             //   "ATOM      4  O2    T A   1      -2.562   2.608   0.000\n" +
+                "ATOM      5  N3    T A   1      -0.298   2.407   0.000\n" +
+                "ATOM      6  C4    T A   1       0.994   2.897   0.000\n" +
+             //   "ATOM      7  O4    T A   1       1.944   2.119   0.000\n" +
+                "ATOM      8  C5    T A   1       1.106   4.338   0.000\n" +
+            //    "ATOM      9  C7    T A   1       2.466   4.961   0.001\n" +
+                "ATOM     10  C6    T A   1      -0.024   5.057   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  C\n" +
+             //   "ATOM      1  C1'   C A   1      -2.477   5.402   0.000\n" +
+                "ATOM      2  N1    C A   1      -1.287   4.523   0.000\n" +
+                "ATOM      3  C2    C A   1      -1.477   3.143   0.000\n" +
+           //     "ATOM      4  O2    C A   1      -2.623   2.684   0.001\n" +
+                "ATOM      5  N3    C A   1      -0.385   2.335   0.000\n" +
+                "ATOM      6  C4    C A   1       0.849   2.855   0.000\n" +
+         //       "ATOM      7  N4    C A   1       1.883   2.020   0.001\n" +
+                "ATOM      8  C5    C A   1       1.065   4.271   0.000\n" +
+                "ATOM      9  C6    C A   1      -0.038   5.062   0.000\n" +
+                "END",
+        "SEQRES   1 A    1  A\n" +
+		        "ATOM      1  O3'   A A   1       0.000  -0.929  -1.315\n" +
+                "ATOM      2  P     A A   1       0.000   0.000   0.000\n" +
+                "ATOM      3  OP1   A A   1      -1.208   0.854  -0.000\n" +
+                "ATOM      4  OP2   A A   1       1.208   0.854   0.000\n" +
+                "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
+                "END"
+];
+
+
+let midFrame = [];
     
 function parseBases() {
   let letters = ["A", "G", "T", "C"];
@@ -345,11 +409,13 @@ function clone(vec) {
 }
 
 function translate(val, points) {
+
   for (let i = 0; i < points.length; i++) {
   	points[i][0] += val[0];
   	points[i][1] += val[1];
   	points[i][2] += val[2];
   }
+
 }
 
 function superposition(fixed, moved) {
@@ -357,14 +423,15 @@ function superposition(fixed, moved) {
 	let cenb = centroid(moved);
 	cena[0] = -cena[0]; cena[1] = -cena[1]; cena[2] = -cena[2];
 	cenb[0] = -cenb[0]; cenb[1] = -cenb[1]; cenb[2] = -cenb[2];
+
     let a = clone(fixed);
     translate(cena, a);
+
     let b = clone(moved);
     translate(cenb, b);
-    console.log(a);
-    console.log(b);
+
     let corr = numeric.dot(numeric.transpose(b), a);
-	console.log(corr);
+	
     let svd = numeric.svd(corr);
     let u = clone(svd.U);
     let u_trans = numeric.transpose(u);
@@ -374,29 +441,30 @@ function superposition(fixed, moved) {
     let rot = numeric.transpose(rot_notrans)
     let det = numeric.det(rot);
     let cb_tmp;
-	console.log(rot);
-    console.log(det);
     if (det < 0) {
     	console.log("det < 0");
     	vt = vt_orig;
     	vt[2][0] = -vt[2][0];
     	vt[2][1] = -vt[2][1];
     	vt[2][2] = -vt[2][2];
-		cb_tmp = numeric.transpose(vt);
+		cb_tmp = numeric.transpose(vt);	
 		rot_notrans = numeric.dot(cb_tmp, u_trans);
 		rot = numeric.transpose(rot_notrans);
     }
     
     cb_tmp = numeric.dot([cenb], rot);
     let trans = [cena[0] - cb_tmp[0][0], cena[1]-cb_tmp[0][1], cena[2] - cb_tmp[0][2]];
-    console.log(rot);
-    console.log(trans);
+    console.log(JSON.stringify(rot));
+    console.log(JSON.stringify(trans));
     let result = [];
     result.length = 4;
-    result[0] = [rot[0][0], rot[0][1], rot[0][2], trans[0]];
-    result[1] = [rot[1][0], rot[1][1], rot[1][2], trans[1]];
-    result[2] = [rot[2][0], rot[2][1], rot[2][2], trans[2]];
+    //
+    rot = numeric.transpose(rot);
+    result[0] = [rot[0][0], rot[0][1], rot[0][2], -trans[0]];
+    result[1] = [rot[1][0], rot[1][1], rot[1][2], -trans[1]];
+    result[2] = [rot[2][0], rot[2][1], rot[2][2], -trans[2]];
     result[3] = [0.0, 0.0, 0.0, 1.0];
+    console.log(JSON.stringify(result));
     return result;
 }
 
@@ -426,7 +494,7 @@ export function fitFrames(x) {
  		    W2.push([atoms[2][i].x, atoms[2][i].y, atoms[2][i].z]);
 		    rW2.push([bases[letters[2]][j].x, bases[letters[2]][j].y, bases[letters[2]][j].z]);
 		  }
-		} 
+		}
 	}
 
 	for (let i = 0; i < atoms[3].length; i++) {
@@ -447,12 +515,8 @@ export function fitFrames(x) {
 		} 
 	}
 
-	console.log(W1.length, rW1.length);
-	console.log(W2.length, rW2.length);
-	console.log(C1.length, rC1.length);
-	console.log(rC2.length, rC2.length);
 	let result = [superposition(W1, rW1), superposition(C1, rC1), superposition(W2, rW2), superposition(C2, rC2)];
-    console.log(result);
+    console.log(JSON.stringify(result));
     return result;
 	
 }
@@ -480,26 +544,15 @@ function removeComponent(m1, m2) {
 		result[i] = m1[i] - dot*m2[i];
 	}
 	
-	let norm = 0.0;
-	
-	for (let i = 0; i < result.length; i++) {
-		norm += result[i]*result[i];
-	}
-	norm = Math.sqrt(norm);
-	
-	for (let i = 0; i < result.length; i++) {
-		result[i] /= norm;
-	}
-	
 	return result;
 	
 }
 
 export function getBasePlanes(x) {
-	console.log(x);
+	//console.log(x);
 	let frames = fitFrames(x);
 	if (!frames) return;
-	console.log(frames);
+	//console.log(JSON.stringify(frames));
 	let ref1 = clone(frames[0]);
 	let ref2 = clone(frames[1]);
 	
@@ -520,19 +573,31 @@ export function getBasePlanes(x) {
 	
 	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
+	let test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
+	let testsvd = numeric.svd(test);
+	let Q = numeric.dot(testsvd.U, numeric.transpose(testsvd.V));
 	let x2 = [temp[0][0], temp[1][0], temp[2][0]];
 	y2 = [temp[0][1], temp[1][1], temp[2][1]];
 	z2 = [temp[0][2], temp[1][2], temp[2][2]];
 	x2 = removeComponent(x2, y2);
 	x2 = removeComponent(x2, z2);
 	y2 = removeComponent(y2, z2);
-	z2 = removeComponent(z2, [0,0,0]);
 
-	temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
-	temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
-	temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
 
-	let pairingParameters = calculatetp(numeric.dot(numeric.inv(temp2), ref2));
+	//temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
+	//temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
+	//temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
+    temp[0][0] = Q[0][0]; temp[1][0] = Q[1][0]; temp[2][0] = Q[2][0];
+	temp[0][1] = Q[0][1]; temp[1][1] = Q[1][1]; temp[2][1] = Q[2][1];
+	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
+
+
+	for (let i = 0; i < 3; i++) {
+		let r = Math.sqrt(temp[0][i]*temp[0][i] + temp[1][i]*temp[1][i] + temp[2][i]*temp[2][i]);
+		temp[0][i] /= r; temp[1][i] /= r; temp[2][i] /= r;
+	}
+
+	let pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	console.log("Pairing Parameters:");
 	console.log(pairingParameters);
 	let result = [0, 0];
@@ -558,24 +623,38 @@ export function getBasePlanes(x) {
 	
 	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
-	console.log(temp);
+	//console.log(temp);
+	test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
+	testsvd = numeric.svd(test);
+	Q = numeric.dot(testsvd.U, numeric.transpose(testsvd.V));
 	x2 = [temp[0][0], temp[1][0], temp[2][0]];
 	y2 = [temp[0][1], temp[1][1], temp[2][1]];
 	z2 = [temp[0][2], temp[1][2], temp[2][2]];
 	x2 = removeComponent(x2, y2);
 	x2 = removeComponent(x2, z2);
 	y2 = removeComponent(y2, z2);
-	z2 = removeComponent(z2, [0,0,0]);
 	
-	temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
-	temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
-	temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
+	//temp[0][0] = x2[0]; temp[1][0] = x2[1]; temp[2][0] = x2[2];
+	//temp[0][1] = y2[0]; temp[1][1] = y2[1]; temp[2][1] = y2[2];
+	//temp[0][2] = z2[0]; temp[1][2] = z2[1]; temp[2][2] = z2[2];
+    temp[0][0] = Q[0][0]; temp[1][0] = Q[1][0]; temp[2][0] = Q[2][0];
+	temp[0][1] = Q[0][1]; temp[1][1] = Q[1][1]; temp[2][1] = Q[2][1];
+	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
 
-	pairingParameters = calculatetp(numeric.dot(numeric.inv(temp2), ref2));
+	for (let i = 0; i < 3; i++) {
+		let r = Math.sqrt(temp[0][i]*temp[0][i] + temp[1][i]*temp[1][i] + temp[2][i]*temp[2][i]);
+		temp[0][i] /= r; temp[1][i] /= r; temp[2][i] /= r;
+	}
+
+	pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
 	console.log("Pairing Parameters:");
 	console.log(pairingParameters);
 	result[1] = clone(temp);	
-	console.log(calculatetp(numeric.dot(numeric.inv(result[0]), result[1])));
+	let stepParameters = calculatetp(numeric.dot(numeric.inv(result[0]), result[1]));
+	console.log("Step Parameters:");
+	console.log(stepParameters);
+	midFrame = calculateM(stepParameters);
+	console.log(JSON.stringify(midFrame));
 	return result;
 
 }
@@ -587,7 +666,7 @@ export function testSuperposition() {
 	return(superposition(points, ref));
 }
 
-export function midFrame(P, A1, A2) {
+export function midFrameTest(P, A1, A2) {
 	let A = numeric.dot(numeric.inv(A1), A2);
 	let steps = calculatetp(A);
 	let basis = calculateM(steps);

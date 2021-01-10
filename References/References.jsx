@@ -534,6 +534,15 @@ function numN2(val, N) {
 	return str;
 }
 
+export function scale(t1, t2, t3) {
+	t1 *= 11.4591559; t2 *= 11.4591559; t3 *= 11.4591559;
+	let th = Math.sqrt(t1*t1+t2*t2+t3*t3);
+	let r = Math.PI*th/180.0;
+	let r2 = r/2.0;
+	//console.log(r2/Math.tan(r2));
+	return r2/Math.tan(r2);
+}
+
 export function writePDB() {
 	let data = getAtomSets();
 	let letters = data.letters;

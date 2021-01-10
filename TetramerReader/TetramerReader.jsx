@@ -83,7 +83,7 @@ class TetramerReader extends React.Component {
 			px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
 			px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
 		];
-		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2]];
+		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], parseFloat(litems[15])*11.4591559*ref.scale(litems[13], litems[14], litems[15])];
         dataSet.push(dataItem);
       });
       console.log(JSON.stringify(dataSet));
@@ -197,17 +197,23 @@ class TetramerReader extends React.Component {
   	if (this.state.check4) useData[3] = true;
   	if (!this.state.check1 && !this.state.check2 && !this.state.check3 && !this.state.check4) return;
   	let min = 1000, max = -1000;
+
   	for (let i = 0; i < 4; i++) {
 
   		if (useData[i]) {
 	  	  	let xvalues = [];
  	 		let yvalues = [];
+  			let max_diff = 0;
   			this.state.analysis[i].forEach((value, index) => {
+
   				xvalues.push(value[0]);
   				if (this.state.plotItem === "twist") {
   					yvalues.push(value[1]);
   					if (value[1] > max) max = value[1];
   					if (value[1] < min) min = value[1];
+  					xvalues.push(value[0]);
+  					yvalues.push(value[8]);
+  					if (Math.abs(value[8]-value[1]) > max_diff) max_diff = Math.abs(value[8] - value[1]);
   				}
   				else if (this.state.plotItem === "px") {
   					yvalues.push(value[2]);
@@ -254,9 +260,11 @@ class TetramerReader extends React.Component {
                 	}
             	}
             });
+            console.log(max_diff);
   		}
   	
   	}
+
   	let dtick = 0.1;
   	if (max-min > 2) dtick = 0.25;
   	if (max-min > 4) dtick = 0.5;

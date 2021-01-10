@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 import * as trois from 'three';
 import numeric from 'numeric';
 import Eigenvector from './Eigenvector.jsx';
-import * as ref from './References.jsx';
-import * as ref3 from './References3DNA.jsx';
+import * as ref from '../References/References.jsx';
+import * as ref3 from '../References/References3DNA.jsx';
 
 class DThree extends Component {
 
@@ -12,6 +12,7 @@ class DThree extends Component {
     super(props);
     this.state = {
       modeNum : '0',
+      showIC: false,
       isDragging: false,
       useScale: true,
       parameters3: [],
@@ -30,7 +31,8 @@ class DThree extends Component {
       tetramer: props.tetramer,
       eigenvalues: [],
       eigenvectors: [],
-      eigenlist: []
+      eigenlist: [],
+      pdbText: ''
     };
     this.scene = null;
     this.camera = null;
@@ -99,16 +101,25 @@ class DThree extends Component {
     let px = PhoW.x - midframe[0][3];
     let py = PhoW.y - midframe[1][3];
     let pz = PhoW.z - midframe[2][3];
-	let pw = [px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
-			  px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
-			  px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]];
+	let pw = [
+		px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	];
     px = PhoC.x - midframe[0][3];
     py = PhoC.y - midframe[1][3];
     pz = PhoC.z - midframe[2][3];	
-    let pc = [px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
-			  px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
-			  px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]];
-	this.setState({phoW: pw, phoC: pc, parameters3: ref3.getParameters()});
+    let pc = [
+    	px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	];
+	this.setState({
+		phoW: pw, 
+		phoC: pc, 
+		parameters3: ref3.getParameters(),
+		pdbText: ref.writePDB()
+	});
     console.log(points);
     document.body.style.backgroundColor = "white";
     this.scene = new trois.Scene();
@@ -116,7 +127,7 @@ class DThree extends Component {
     this.camera = new trois.OrthographicCamera(-20, 20, 20, -20, -40, 500);
     this.scene.add(this.camera);
     this.renderer = new trois.WebGLRenderer();
-    this.renderer.setSize(500, 500);
+    this.renderer.setSize(600, 600);
 //    this.renderer.setSize( window.innerWidth, window.innerHeight);
     this.mount.appendChild(this.renderer.domElement);
     this.mount.addEventListener('mousedown', this.onMouseDown);
@@ -221,22 +232,30 @@ class DThree extends Component {
         this.setState({evalue: this.state.eigenvalues[parseInt(value)]});
   }
 
+
   render() {
+  
     let valtitles = ["pair 1", "pho W", "bp step", "pho C", "pair 2"];
     let val3titles = ["pair 1", "bp step", "pair 2"];
     let meanvals = [this.state.mean.slice(0,6), this.state.mean.slice(6, 12), this.state.mean.slice(12, 18), this.state.mean.slice(18, 24), this.state.mean.slice(24, 30)];
+    
+    
     return (<>
-        {this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
+    	<div className="data-window">
+	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
+	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>x_p</td><td>y_p</td><td>z_p</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
+	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
-          ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation</>
-        : null}<br/>
-	<b>Mean state:</b><table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{value[0]*11.46}</td><td>{value[1]*11.46}</td><td>{value[2]*11.46}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
-	<b>Phosphates:</b><table><tbody><tr><td>xP {this.state.phoW[0]}</td><td>yP {this.state.phoW[1]}</td><td>zP {this.state.phoW[2]}</td></tr><tr><td>xP {this.state.phoC[0]}</td><td>yP {this.state.phoC[1]}</td><td>zP {this.state.phoC[2]}</td></tr></tbody></table>
-	<div ref={ref => (this.mount = ref)}></div>
+        ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation</>
+        : null}
+	<div style={{border: "solid", margin: "auto", width:"600px", height: "600px", justifyContent: "center", textAlign: "center"}} ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>
-	  	<b>3DNA state:</b><table><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0]}</td><td>{value[1]}</td><td>{value[2]}</td><td>{value[3]}</td><td>{value[4]}</td><td>{value[5]}</td></tr>))}</tbody></table>
-	  <pre>{ref.writePDB()}</pre><br/></>);
+	  	<b>3DNA state:</b><table><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></table><br/><br/>
+	  <u><b>PDB text file</b></u>
+	  <pre>{this.state.pdbText}</pre><br/>
+	  </div>
+	  </>);
   }
 //<button onClick={() => {}}>Animate</button>
 }

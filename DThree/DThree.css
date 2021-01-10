@@ -1,3 +1,15 @@
 table, td {
-	border: 1px solid black;
+	border-collapse: collapse;
+	border: 2px solid rgb(200, 200, 200);
+	margin: auto;
+	font-family: sans-serif;
+	text-align: center;
+}
+
+.data-window {
+	text-align: center;
+}
+
+pre {
+	text-align: left;
 }

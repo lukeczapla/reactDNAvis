@@ -65,69 +65,6 @@ export const bases = [
                 "END"
 ];
 
-// [[0.5886547845133248,-1.195192871809648,0.05471178873466224,0.16861022729204292],[1.195192871809648,0.5895149523134533,0.018790583292016924,-0.004630873850297916],[-0.05471178873466224,0.018790583292016924,0.9991398321998713,1.7129476437285598],[0,0,0,1]]
-
-/*
-export const bases = [
-        "SEQRES   1 A    1  A\n" +
-                "ATOM      1  C1'   A A   1      -2.498   5.390   0.000\n" +
-                "ATOM      2  N9    A A   1      -1.287   4.523   0.000\n" +
-                "ATOM      3  C8    A A   1       0.041   4.887   0.002\n" +
-                "ATOM      4  N7    A A   1       0.863   3.883   0.001\n" +
-                "ATOM      5  C5    A A   1       0.033   2.771   0.000\n" +
-                "ATOM      6  C6    A A   1       0.298   1.392   0.000\n" +
-                "ATOM      7  N6    A A   1       1.611   0.930   0.000\n" +
-                "ATOM      8  N1    A A   1      -0.759   0.558  -0.001\n" +
-                "ATOM      9  C2    A A   1      -1.986   1.077  -0.002\n" +
-                "ATOM     10  N3    A A   1      -2.354   2.339  -0.002\n" +
-                "ATOM     11  C4    A A   1      -1.278   3.153   0.000\n" +
-                "END",
-        "SEQRES   1 A    1  G\n" +
-                "ATOM      1  C1'   G A   1      -2.477   5.390   0.000\n" +
-                "ATOM      2  N9    G A   1      -1.287   4.523   0.000\n" +
-                "ATOM      3  C8    G A   1       0.043   4.883   0.001\n" +
-                "ATOM      4  N7    G A   1       0.871   3.868   0.001\n" +
-                "ATOM      5  C5    G A   1       0.031   2.755   0.000\n" +
-                "ATOM      6  C6    G A   1       0.348   1.372   0.001\n" +
-                "ATOM      7  O6    G A   1       1.552   0.923   0.000\n" +
-                "ATOM      8  N1    G A   1      -0.812   0.583   0.000\n" +
-                "ATOM      9  C2    G A   1      -2.105   1.066   0.000\n" +
-                "ATOM     10  N2    G A   1      -2.952   0.113  -0.001\n" +
-                "ATOM     11  N3    G A   1      -2.400   2.364  -0.001\n" +
-                "ATOM     12  C4    G A   1      -1.287   3.144   0.000\n" +
-                "END",
-        "SEQRES   1 A    1  T\n" +
-                "ATOM      1  C1'   T A   1      -2.498   5.390   0.000\n" +
-                "ATOM      2  N1    T A   1      -1.287   4.523   0.000\n" +
-                "ATOM      3  C2    T A   1      -1.491   3.164   0.000\n" +
-                "ATOM      4  O2    T A   1      -2.567   2.632   0.000\n" +
-                "ATOM      5  N3    T A   1      -0.345   2.392   0.001\n" +
-                "ATOM      6  C4    T A   1       0.954   2.856   0.001\n" +
-                "ATOM      7  O4    T A   1       1.938   2.137   0.000\n" +
-                "ATOM      8  C5    T A   1       1.067   4.295   0.002\n" +
-                "ATOM      9  C7    T A   1       2.464   4.978   0.001\n" +
-                "ATOM     10  C6    T A   1      -0.031   5.070   0.001\n" +
-                "END",
-        "SEQRES   1 A    1  C\n" +
-                "ATOM      1  C1'   C A   1      -2.498   5.390   0.000\n" +
-                "ATOM      2  N1    C A   1      -1.287   4.523   0.000\n" +
-                "ATOM      3  C2    C A   1      -1.477   3.143   0.000\n" +
-                "ATOM      4  O2    C A   1      -2.623   2.684   0.001\n" +
-                "ATOM      5  N3    C A   1      -0.385   2.335   0.000\n" +
-                "ATOM      6  C4    C A   1       0.849   2.855   0.002\n" +
-                "ATOM      7  N4    C A   1       1.883   2.020   0.001\n" +
-                "ATOM      8  C5    C A   1       1.065   4.271   0.002\n" +
-                "ATOM      9  C6    C A   1      -0.038   5.062   0.001\n" +
-                "END",
-        "SEQRES   1 A    1  A\n" +
-		        "ATOM      1  O3'   A A   1       0.000  -0.929  -1.315\n" +
-                "ATOM      2  P     A A   1       0.000   0.000   0.000\n" +
-                "ATOM      3  OP1   A A   1      -1.208   0.854  -0.000\n" +
-                "ATOM      4  OP2   A A   1       1.208   0.854   0.000\n" +
-                "ATOM      5  O5'   A A   1       0.000  -0.930   1.315\n" +
-                "END"
-];
-*/
 
 export function parseBases() {
   let letters = ["A", "G", "T", "C", "pho"];
@@ -156,6 +93,8 @@ export const phoRot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
                        [0.81639941, 0.57748763, 0.0, 0.0],
                        [0.0, 0.0, 0.0, 1.0]];
 
+
+// this is used for the pairing parameters.
 function calculateFrameMID(ic, isphosphate = false) {
   let uscale = 5.0;
   let u = [[ic[0], ic[1], ic[2]]];
@@ -303,6 +242,7 @@ export function calculateQhalf(fra) {
 
     return numeric.add(numeric.identity(3), numeric.mul(upuu, 2.0/(1.0+v1)));
 }
+
 
 export function jeigen(a) {
 
@@ -600,7 +540,7 @@ export function writePDB() {
 	let line = "ATOM      1  P     A A   1       0.000   0.000   0.000 ";
 	let atom = 1;
 	let result = "";
-	console.log(letters);
+	//console.log(letters);
 	Object.keys(data.atoms).forEach((key, index) => {
 		//if (index >= 4) return;
 		for (let i = 0; i < data.atoms[key].length; i++) {
@@ -619,6 +559,7 @@ export function writePDB() {
 		  result += line + "\n";
 		 }
 	});
+	result += "END\n";
 	return result;
 }
 

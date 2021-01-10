@@ -398,24 +398,22 @@ function superposition(fixed, moved) {
     	vt[2][0] = -vt[2][0];
     	vt[2][1] = -vt[2][1];
     	vt[2][2] = -vt[2][2];
-		cb_tmp = numeric.transpose(vt);	
-		rot_notrans = numeric.dot(cb_tmp, u_trans);
-		rot = numeric.transpose(rot_notrans);
+	cb_tmp = numeric.transpose(vt);	
+	rot_notrans = numeric.dot(cb_tmp, u_trans);
+	rot = numeric.transpose(rot_notrans);
     }
     
     cb_tmp = numeric.dot([cenb], rot);
     let trans = [cena[0] - cb_tmp[0][0], cena[1]-cb_tmp[0][1], cena[2] - cb_tmp[0][2]];
-    //console.log(JSON.stringify(rot));
-    //console.log(JSON.stringify(trans));
     let result = [];
     result.length = 4;
-    //
+
     rot = numeric.transpose(rot);
     result[0] = [rot[0][0], rot[0][1], rot[0][2], -trans[0]];
     result[1] = [rot[1][0], rot[1][1], rot[1][2], -trans[1]];
     result[2] = [rot[2][0], rot[2][1], rot[2][2], -trans[2]];
     result[3] = [0.0, 0.0, 0.0, 1.0];
-    console.log(JSON.stringify(result));
+    //console.log(JSON.stringify(result));
     return result;
 }
 
@@ -507,6 +505,8 @@ export function getBasePlanes(x) {
 		setColumn(ref2, 2, z2);
 	}
 	
+	// we average the base rotations and then find the best fitting 3x3 Q matrix
+	//   by doing the SVD of this and calculating U*V_transpose
 	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
 	let test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
@@ -519,8 +519,8 @@ export function getBasePlanes(x) {
 
 
 	let pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
-	console.log("Pairing Parameters:");
-	console.log(pairingParameters);
+	//console.log("Pairing Parameters:");
+	//console.log(pairingParameters);
 	pairingParameters1 = pairingParameters;
 	let result = [0, 0];
 	result[0] = clone(temp);
@@ -543,9 +543,9 @@ export function getBasePlanes(x) {
 		setColumn(ref2, 2, z2);
 	}
 	
+	// average and find the best fit with SVD(average) and then Q = U*V_transpose
 	temp = numeric.add(temp, ref2);
 	temp = numeric.mul(0.5, temp);
-	//console.log(temp);
 	test = [[temp[0][0], temp[0][1], temp[0][2]], [temp[1][0], temp[1][1], temp[1][2]], [temp[2][0], temp[2][1], temp[2][2]]];
 	testsvd = numeric.svd(test);
 	Q = numeric.dot(testsvd.U, numeric.transpose(testsvd.V));
@@ -555,28 +555,38 @@ export function getBasePlanes(x) {
 	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
 
 	pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
-	console.log("Pairing Parameters:");
-	console.log(pairingParameters);
+	//console.log("Pairing Parameters:");
+	//console.log(pairingParameters);
 	pairingParameters2 = pairingParameters;
 
 	result[1] = clone(temp);
 	stepParameters = calculatetp(numeric.dot(numeric.inv(result[0]), result[1]));
-	console.log("Step Parameters:");
-	console.log(stepParameters);
+	//console.log("Step Parameters:");
+	//console.log(stepParameters);
 	midFrame = calculateM(stepParameters);
-	console.log(JSON.stringify(midFrame));
+	//console.log(JSON.stringify(midFrame));
 	return result;
 
 }
 
-export function testSuperposition() {
+
+export function getMidFrame() {
+	return midFrame;
+}
+
+export function getParameters() {
+	return [pairingParameters1, stepParameters, pairingParameters2];
+}
+
+
+function testSuperposition() {
 	let points = [[0, 0, 0], [2,0,0], [0,2,0]];
 	let ref = [[0, 0, 2], [0, 2, 2], [2,0,2]];
-	console.log(superposition(points, ref));
+	//console.log(superposition(points, ref));
 	return(superposition(points, ref));
 }
 
-export function midFrameTest(P, A1, A2) {
+function midFrameTest(P, A1, A2) {
 	let A = numeric.dot(numeric.inv(A1), A2);
 	let steps = calculatetp(A);
 	let basis = calculateM(steps);
@@ -591,13 +601,4 @@ export function midFrameTest(P, A1, A2) {
 
 	return [xp, yp, zp];
 }
-
-export function getMidFrame() {
-	return midFrame;
-}
-
-export function getParameters() {
-	return [pairingParameters1, stepParameters, pairingParameters2];
-}
-
 

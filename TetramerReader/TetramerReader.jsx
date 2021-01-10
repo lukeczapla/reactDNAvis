@@ -314,12 +314,12 @@ class TetramerReader extends React.Component {
     	  <div className="analyze-data">
     	  <button onClick={this.clicked}>Collect Data</button>{this.state.analysis[0].length > 0 ? <><input type="checkbox" name="check1" checked={this.state.check1} onChange={this.inputChanged}/>TX-3 <input type="checkbox" name="check2" checked={this.state.check2} onChange={this.inputChanged}/>cgDNA+ <input type="checkbox" name="check3" checked={this.state.check3} onChange={this.inputChanged}/>MD <input type="checkbox" name="check4" checked={this.state.check4} onChange={this.inputChanged}/>TX-2 <select name="plotItem" value={this.state.plotItem} onChange={this.inputChanged}>
     	  	<option id="twist" value="twist" key="1">Plot Twist</option>
-    	  	<option id="px" value="px" key="1">Phosphate xp</option>
-    	  	<option id="py" value="py" key="1">Phosphate yp</option>
-    	  	<option id="pz" value="pz" key="1">Phosphate zp</option>
-    	  	<option id="px2" value="px2" key="1">Phosphate xp (Crick)</option>
-    	  	<option id="py2" value="py2" key="1">Phosphate yp (Crick)</option>
-    	  	<option id="pz2" value="pz2" key="1">Phosphate zp (Crick)</option>
+    	  	<option id="px" value="px" key="2">Phosphate xp</option>
+    	  	<option id="py" value="py" key="3">Phosphate yp</option>
+    	  	<option id="pz" value="pz" key="4">Phosphate zp</option>
+    	  	<option id="px2" value="px2" key="5">Phosphate xp (Crick)</option>
+    	  	<option id="py2" value="py2" key="6">Phosphate yp (Crick)</option>
+    	  	<option id="pz2" value="pz2" key="7">Phosphate zp (Crick)</option>
     	  </select><button onClick={this.makePlot}>Create Plot!</button></> : null}
     	  {this.state.layout ? <Plot layout={this.state.layout} data={this.state.data} /> : null} <button onClick={this.clearData}>Clear Data and Plots</button>
     	  </div>

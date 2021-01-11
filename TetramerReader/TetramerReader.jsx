@@ -11,9 +11,9 @@ class TetramerReader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loaded: '',
-      selected: '1',
-      tetramer: '',
+      loaded: "",
+      selected: "1",
+      tetramer: "",
       mean: {},
       covariance: {},
       items: [],
@@ -83,7 +83,7 @@ class TetramerReader extends React.Component {
 			px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
 			px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
 		];
-		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], parseFloat(litems[15])*11.4591559*ref.scale(litems[13], litems[14], litems[15])];
+		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], parseFloat(litems[15])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[13])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[14])*11.4591559*ref.scale(litems[13], litems[14], litems[15])];
         dataSet.push(dataItem);
       });
       console.log(JSON.stringify(dataSet));
@@ -107,11 +107,11 @@ class TetramerReader extends React.Component {
 
 
   inputChanged = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
     this.setState({
       [e.target.name]: value
     });
-    if (e.target.name === 'tetramer') this.engage();
+    if (e.target.name === "tetramer") this.engage();
   };
 
   loadSet = () => {
@@ -207,7 +207,17 @@ class TetramerReader extends React.Component {
   			this.state.analysis[i].forEach((value, index) => {
 
   				xvalues.push(value[0]);
-  				if (this.state.plotItem === "twist") {
+  				if (this.state.plotItem === "tilt") {
+  					yvalues.push(value[9]);
+  					if (value[9] > max) max = value[9];
+  					if (value[9] < min) min = value[9];
+  				}
+  				else if (this.state.plotItem === "roll") {
+  					yvalues.push(value[10]);
+  					if (value[10] > max) max = value[10];
+  					if (value[10] < min) min = value[10];
+  				}
+  				else if (this.state.plotItem === "twist") {
   					yvalues.push(value[1]);
   					if (value[1] > max) max = value[1];
   					if (value[1] < min) min = value[1];
@@ -320,6 +330,8 @@ class TetramerReader extends React.Component {
     	  	<option id="px2" value="px2" key="5">Phosphate xp (Crick)</option>
     	  	<option id="py2" value="py2" key="6">Phosphate yp (Crick)</option>
     	  	<option id="pz2" value="pz2" key="7">Phosphate zp (Crick)</option>
+    	  	<option id="tilt" value="tilt" key="8">Tilt</option>
+    	  	<option id="roll" value="roll" key="9">Roll</option>
     	  </select><button onClick={this.makePlot}>Create Plot!</button></> : null}
     	  {this.state.layout ? <Plot layout={this.state.layout} data={this.state.data} /> : null} <button onClick={this.clearData}>Clear Data and Plots</button>
     	  </div>

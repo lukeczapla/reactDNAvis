@@ -523,7 +523,10 @@ export function getBasePlanes(x) {
 	//console.log(pairingParameters);
 	pairingParameters1 = pairingParameters;
 	let result = [0, 0];
-	result[0] = clone(temp);
+	
+	let Mtest = calculateM(pairingParameters);
+	result[0] = clone(numeric.dot(ref2, Mtest));
+	//result[0] = clone(temp);
 	
 	ref1 = clone(frames[2]);
 	ref2 = clone(frames[3]);
@@ -555,11 +558,14 @@ export function getBasePlanes(x) {
 	temp[0][2] = Q[0][2]; temp[1][2] = Q[1][2]; temp[2][2] = Q[2][2];
 
 	pairingParameters = calculatetp(numeric.dot(numeric.inv(ref2), temp2));
+	Mtest = calculateM(pairingParameters);
+	//console.log(JSON.stringify(temp));
+	//console.log(JSON.stringify(numeric.dot(ref2, Mtest)));
 	//console.log("Pairing Parameters:");
 	//console.log(pairingParameters);
 	pairingParameters2 = pairingParameters;
-
-	result[1] = clone(temp);
+	result[1] = clone(numeric.dot(ref2, Mtest));
+	//result[1] = clone(temp);
 	stepParameters = calculatetp(numeric.dot(numeric.inv(result[0]), result[1]));
 	//console.log("Step Parameters:");
 	//console.log(stepParameters);

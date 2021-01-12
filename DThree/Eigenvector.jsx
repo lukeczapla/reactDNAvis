@@ -32,7 +32,7 @@ class Eigenvector extends Component {
         {values.pho2.map((element) => (<td key={element}>{element.toFixed(7)}</td>))}
 	</tr><tr>
         <td>Pair 2</td>
-        {values.pair1.map((element) => (<td key={element}>{element.toFixed(7)}</td>))}
+        {values.pair2.map((element) => (<td key={element}>{element.toFixed(7)}</td>))}
 	</tr>
 	</tbody></table></>
 		);

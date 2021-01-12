@@ -97,7 +97,7 @@ class DThree extends Component {
     let PhoW = ref.getAtomSets().atoms[1][1];
     let PhoC = ref.getAtomSets().atoms[4][1];
     ref3.getBasePlanes(ref.getAtomSets());
-    let midframe = ref3.getMidFrame();
+    let midframe = ref.getMidFrame();
     let px = PhoW.x - midframe[0][3];
     let py = PhoW.y - midframe[1][3];
     let pz = PhoW.z - midframe[2][3];

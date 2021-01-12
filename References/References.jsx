@@ -94,69 +94,6 @@ export const phoRot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
                        [0.0, 0.0, 0.0, 1.0]];
 
 
-// this is used for the pairing parameters.
-function calculateFrameMID(ic, isphosphate = false) {
-  let uscale = 5.0;
-  let u = [[ic[0], ic[1], ic[2]]];
-  let v = [[ic[3], ic[4], ic[5]]];
-  // scale the coordinates
-  u = numeric.mul(u, 0.25/uscale);
-  // calculate skew-symmetric matrix related to u
-  let uvec = numeric.identity(3); uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
-  uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
-  uvec = numeric.sub(uvec, numeric.transpose(uvec));
-
-  let v1 = numeric.dot(u, numeric.transpose(u))[0][0];
-  //console.log(v1);
-
-  let upuu = numeric.add(uvec, numeric.dot(uvec, uvec));
-  // calculate the rotation matrix that goes with u
-  let Q = numeric.add(numeric.identity(3), numeric.mul(2.0/(1.0+v1), upuu));
-//  console.log("Q");
-//  console.log(Q);
-
-  // assign it as the 3x3 result portion of 4x4 SE(3) matrix
-  let result = numeric.identity(4);
-  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) result[i][j] = Q[i][j];
-
-  let uhalf = numeric.mul(u, uscale*(2.0/(1.0+Math.sqrt(1.0 + parseFloat(numeric.dot(u, numeric.transpose(u))[0])))));
-  u = numeric.mul(uhalf, 0.25/uscale);
-
-  uvec = numeric.identity(3);
-  uvec[0][0] = 0.0;  uvec[1][1] = 0.0; uvec[2][2] = 0.0;
-  uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
-  uvec = numeric.sub(uvec, numeric.transpose(uvec));
-
-//  console.log(numeric.dot(u, numeric.transpose(u)));
-  v1 = numeric.dot(u, numeric.transpose(u))[0][0];
-  Qhalf = numeric.add(numeric.identity(3), numeric.mul(upuu, 2.0/(1.0+v1)));
-
-  if (isphosphate) {
-    let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
-                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
-                  [0.81639941, 0.57748763, 0.0, 0.0],
-                  [0.0, 0.0, 0.0, 1.0]];
-    result = numeric.dot(result, numeric.inv(p__rot));
-
-    result[0][3] = v[0][0];
-    result[1][3] = v[0][1];
-    result[2][3] = v[0][2];
-
-    return result;
-  }
-
-  let q = numeric.dot(Qhalf, numeric.transpose(v));
- // console.log(q[0][0]);
-  result[0][3] = q[0][0];
-  result[1][3] = q[1][0];
-  result[2][3] = q[2][0];
-
-  return result;
-
-
-}
-
-
 function calculateFrame(ic, isphosphate = false) {
   let uscale = 5.0;
   let u = [[ic[0], ic[1], ic[2]]];
@@ -183,7 +120,7 @@ function calculateFrame(ic, isphosphate = false) {
   let result = numeric.identity(4);
   for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) result[i][j] = Q[i][j];
 
-  let uhalf = numeric.mul(u, uscale*(2.0/(1.0+Math.sqrt(1.0 + parseFloat(numeric.dot(u, numeric.transpose(u))[0])))));
+  let uhalf = numeric.mul(u, uscale*(2.0/(1.0+Math.sqrt(1.0 + numeric.dot(u, numeric.transpose(u))[0][0]))));
   u = numeric.mul(uhalf, 0.5/uscale);
 
   uvec = numeric.identity(3);
@@ -193,9 +130,9 @@ function calculateFrame(ic, isphosphate = false) {
 
 //  console.log(numeric.dot(u, numeric.transpose(u)));
   v1 = numeric.dot(u, numeric.transpose(u))[0][0];
-  upuu = numeric.mul(upuu, 2.0/(1.0 + v1));
-
-  Qhalf = numeric.add(numeric.identity(3), upuu);
+  //upuu = numeric.mul(upuu, 2.0/(1.0 + v1));
+  upuu = numeric.add(uvec, numeric.dot(uvec, uvec));
+  Qhalf = numeric.add(numeric.identity(3), numeric.mul(upuu, 2.0/(1.0+v1)));
 
   if (isphosphate) {
     let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
@@ -210,12 +147,14 @@ function calculateFrame(ic, isphosphate = false) {
 //    console.log(result);
     return result;
   }
-
+  //console.log(JSON.stringify(Qhalf));
   let q = numeric.dot(Qhalf, numeric.transpose(v));
  // console.log(q[0][0]);
-  result[0][3] = q[0][0];
-  result[1][3] = q[1][0];
-  result[2][3] = q[2][0];
+  //result[0][3] = v[0][0];
+  //result[1][3] = v[0][1];
+  //result[2][3] = v[0][2];
+  
+  result[0][3] = q[0][0]; result[1][3] = q[1][0]; result[2][3] = q[2][0];
 
   return result;
 
@@ -388,7 +327,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 //    else
 //      let A = Ai;
     let A = numeric.identity(4);
-    let bfra = calculateFrameMID(ic.slice(0, 6)); // first pairing pars
+    let bfra = calculateFrame(ic.slice(0, 6)); // first pairing pars
     if (saveState) console.log(bfra);
     bfra[0][3] = bfra[0][3] / 2.0;
     bfra[1][3] = bfra[1][3] / 2.0;
@@ -410,19 +349,19 @@ export function get30Coordinates(ic, step, saveState = false) {
 
     // let's get the mid-frame ??
     if (saveState) {
-    //  stepM = calculateQhalf(ic.slice(12, 18));
-    //  console.log(JSON.stringify(stepM));
-    //  stepM[0][3] = stepM[0][3] / 2.0;
-    //  stepM[1][3] = stepM[1][3] / 2.0;
-    //  stepM[2][3] = stepM[2][3] / 2.0;
-    //  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
-    //    stepM[i][j] = Qhalf[i][j];
-    //  }
-    //  console.log(JSON.stringify(stepM));
+      //console.log(JSON.stringify(calculateFrame(ic.slice(12, 18))));
+      stepM = numeric.add(calculateFrame(ic.slice(12, 18)), numeric.identity(4));
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+        stepM[i][j] = Qhalf[i][j];
+      } 	    
+      stepM[0][3] = stepM[0][3] / 2.0;
+      stepM[1][3] = stepM[1][3] / 2.0;
+      stepM[2][3] = stepM[2][3] / 2.0;
+      //console.log(JSON.stringify(stepM));
     }
     A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
 
-    bfra = calculateFrameMID(ic.slice(24, 30));
+    bfra = calculateFrame(ic.slice(24, 30));
     bfra[0][3] = bfra[0][3] / 2.0;
     bfra[1][3] = bfra[1][3] / 2.0;
     bfra[2][3] = bfra[2][3] / 2.0;
@@ -532,6 +471,10 @@ function numN2(val, N) {
 	if (str.length >= N) return str;
 	while (str.length < N) str = str + " ";
 	return str;
+}
+
+export function getMidFrame() {
+	return stepM;
 }
 
 export function scale(t1, t2, t3) {

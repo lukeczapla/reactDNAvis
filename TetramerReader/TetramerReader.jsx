@@ -66,7 +66,7 @@ class TetramerReader extends React.Component {
 		ref3.getBasePlanes(ref.getAtomSets());
         let stepParameters = ref3.getParameters();
 
-		let midframe = ref3.getMidFrame();
+		let midframe = ref.getMidFrame();
 		let px = PhoW.x - midframe[0][3];
 		let py = PhoW.y - midframe[1][3];
 		let pz = PhoW.z - midframe[2][3];
@@ -86,7 +86,7 @@ class TetramerReader extends React.Component {
 		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], parseFloat(litems[15])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[13])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[14])*11.4591559*ref.scale(litems[13], litems[14], litems[15])];
         dataSet.push(dataItem);
       });
-      console.log(JSON.stringify(dataSet));
+      //console.log(JSON.stringify(dataSet));
       currentAnalysis[index] = dataSet;
 	  count++;
 	  if (count === 4) {

@@ -254,6 +254,7 @@ class DThree extends Component {
 	  	<b>3DNA state:</b><table><tbody>{this.state.parameters3.map((value,index) => (<tr><td>{val3titles[index]}</td><td>{value[0].toFixed(5)}</td><td>{value[1].toFixed(5)}</td><td>{value[2].toFixed(5)}</td><td>{value[3].toFixed(5)}</td><td>{value[4].toFixed(5)}</td><td>{value[5].toFixed(5)}</td></tr>))}</tbody></table><br/><br/>
 	  <u><b>PDB text file</b></u>
 	  <pre>{this.state.pdbText}</pre><br/>
+	  <pre>{JSON.stringify(ref.getFrames())}</pre>
 	  </div>
 	  </>);
   }

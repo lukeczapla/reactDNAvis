@@ -4,6 +4,7 @@ let stepM = numeric.identity(4);
 let Qhalf = numeric.identity(4);
 let bseq = [];
 let bvalues = [];
+let frames = [];
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
@@ -93,7 +94,6 @@ export const phoRot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
                        [0.81639941, 0.57748763, 0.0, 0.0],
                        [0.0, 0.0, 0.0, 1.0]];
 
-
 function calculateFrame(ic, isphosphate = false) {
   let uscale = 5.0;
   let u = [[ic[0], ic[1], ic[2]]];
@@ -143,12 +143,12 @@ function calculateFrame(ic, isphosphate = false) {
     result[0][3] = v[0][0];
     result[1][3] = v[0][1];
     result[2][3] = v[0][2];
-//    console.log(ic);
-//    console.log(result);
+
     return result;
   }
   //console.log(JSON.stringify(Qhalf));
   let q = numeric.dot(Qhalf, numeric.transpose(v));
+  //let q = numeric.dot(v, Qhalf);
  // console.log(q[0][0]);
   //result[0][3] = v[0][0];
   //result[1][3] = v[0][1];
@@ -326,57 +326,78 @@ export function get30Coordinates(ic, step, saveState = false) {
 //      let A = numeric.identity(4);
 //    else
 //      let A = Ai;
+	if (saveState) frames = [];
     let A = numeric.identity(4);
     let bfra = calculateFrame(ic.slice(0, 6)); // first pairing pars
     if (saveState) console.log(JSON.stringify(bfra));
-    bfra[0][3] = bfra[0][3] / 2.0;
-    bfra[1][3] = bfra[1][3] / 2.0;
-    bfra[2][3] = bfra[2][3] / 2.0;
+
+	let eig = jeigen(bfra);
+	let Asqrt = numeric.identity(4);
+	for (let i = 0; i < 4; i++) {
+		Asqrt[i][i] = Math.sqrt(eig.eigenvalues[i]);
+	}
+	let res = numeric.dot(numeric.dot(eig.eigenvectors, Asqrt), numeric.inv(eig.eigenvectors));
+	if (saveState) {
+		console.log(JSON.stringify(numeric.dot(Qhalf, Qhalf)));
+		console.log(JSON.stringify(bfra));
+	}
+    bfra[0][3] = -bfra[0][3] / 2.0;
+    bfra[1][3] = -bfra[1][3] / 2.0;
+    bfra[2][3] = -bfra[2][3] / 2.0;
+    Qhalf = numeric.transpose(Qhalf);
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
     }
     // bfra is now in the middle
 
-    if (saveState) console.log(JSON.stringify(bfra));
-
-    let watson = numeric.dot(A, bfra)
-    let crick = numeric.dot(A, numeric.inv(bfra));
-
+    let crick = numeric.dot(A, bfra)
+    let watson = numeric.dot(crick, calculateFrame(ic.slice(0, 6)));
+    if (saveState) {
+    	frames.push(watson);
+    	frames.push(crick);
+	}
     crick[0][1] *= -1; crick[1][1] *= -1; crick[2][1] *= -1; crick[0][2] *= -1; crick[1][2] *= -1; crick[2][2] *= -1;
 
     // send true to use phoRotation matrix
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
+    if (saveState) frames.push(phoC);
 
-    // let's get the mid-frame ??
+    // let's get the middle frame
     if (saveState) {
-      //console.log(JSON.stringify(calculateFrame(ic.slice(12, 18))));
       stepM = numeric.add(calculateFrame(ic.slice(12, 18)), numeric.identity(4));
       for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
         stepM[i][j] = Qhalf[i][j];
-      } 	    
+      }
       stepM[0][3] = stepM[0][3] / 2.0;
       stepM[1][3] = stepM[1][3] / 2.0;
       stepM[2][3] = stepM[2][3] / 2.0;
       //console.log(JSON.stringify(stepM));
+      frames.push(calculateFrame(ic.slice(12, 18)));
     }
     A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
+    
 
     bfra = calculateFrame(ic.slice(24, 30));
-    bfra[0][3] = bfra[0][3] / 2.0;
-    bfra[1][3] = bfra[1][3] / 2.0;
-    bfra[2][3] = bfra[2][3] / 2.0;
+    
+    bfra[0][3] = -bfra[0][3] / 2.0;
+    bfra[1][3] = -bfra[1][3] / 2.0;
+    bfra[2][3] = -bfra[2][3] / 2.0;
+    Qhalf = numeric.transpose(Qhalf);
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
     }
-    if (saveState) console.log(JSON.stringify(bfra));
-    let watson2 = numeric.dot(A, bfra);
-    let crick2 = numeric.dot(A, numeric.inv(bfra));
+    let crick2 = numeric.dot(A, bfra);
+    let watson2 = numeric.dot(crick2, calculateFrame(ic.slice(24, 30)));
+    if (saveState) {
+		frames.push(watson2);
+		frames.push(crick2);
+	}
 
     crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
 
 
     let phoW = numeric.dot(watson2, calculateFrame(ic.slice(18, 24), true));
-
+    if (saveState) frames.push(phoW);
 
     let strW1 = step[1];
     let strW2 = step[2];
@@ -513,6 +534,10 @@ export function writePDB() {
 	});
 	result += "END\n";
 	return result;
+}
+
+export function getFrames() {
+	return frames;
 }
 
 

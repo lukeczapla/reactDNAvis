@@ -77,12 +77,12 @@ class DThree extends Component {
  }
 
  componentDidMount() {
-    console.log(ref.parseBases());
+    //console.log(ref.parseBases());
     let cov = this.state.cov;
-    console.log(cov);
+    //console.log(cov);
     let F = numeric.inv(cov);
     let eigen = ref.jeigen(F);
-    console.log(eigen);
+    //console.log(eigen);
     let eigenlist = [];
     eigen.eigenvalues.forEach((item, index) => {
 	let val = {index: index, value: item};
@@ -120,7 +120,7 @@ class DThree extends Component {
 		parameters3: ref3.getParameters(),
 		pdbText: ref.writePDB()
 	});
-    console.log(points);
+    //console.log(points);
     document.body.style.backgroundColor = "white";
     this.scene = new trois.Scene();
     this.scene.background = new trois.Color( 0xffffff );
@@ -224,7 +224,6 @@ class DThree extends Component {
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
-      console.log(name + " " + value);
       this.setState({
         [name] : value
       });

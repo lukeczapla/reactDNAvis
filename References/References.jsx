@@ -135,11 +135,11 @@ function calculateFrame(ic, isphosphate = false) {
   Qhalf = numeric.add(numeric.identity(3), numeric.mul(upuu, 2.0/(1.0+v1)));
 
   if (isphosphate) {
-    let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
-                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
-                  [0.81639941, 0.57748763, 0.0, 0.0],
-                  [0.0, 0.0, 0.0, 1.0]];
-    result = numeric.dot(result, numeric.inv(p__rot));
+//    let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
+//                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
+//                  [0.81639941, 0.57748763, 0.0, 0.0],
+//                  [0.0, 0.0, 0.0, 1.0]];
+//    result = numeric.dot(result, numeric.inv(p__rot));
     result[0][3] = v[0][0];
     result[1][3] = v[0][1];
     result[2][3] = v[0][2];
@@ -341,9 +341,9 @@ export function get30Coordinates(ic, step, saveState = false) {
 		console.log(JSON.stringify(numeric.dot(Qhalf, Qhalf)));
 		console.log(JSON.stringify(bfra));
 	}
-    bfra[0][3] = -bfra[0][3] / 2.0;
-    bfra[1][3] = -bfra[1][3] / 2.0;
-    bfra[2][3] = -bfra[2][3] / 2.0;
+    bfra[0][3] = -ic[3] / 2.0;
+    bfra[1][3] = -ic[4] / 2.0;
+    bfra[2][3] = -ic[5] / 2.0;
     Qhalf = numeric.transpose(Qhalf);
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
@@ -379,9 +379,9 @@ export function get30Coordinates(ic, step, saveState = false) {
 
     bfra = calculateFrame(ic.slice(24, 30));
     
-    bfra[0][3] = -bfra[0][3] / 2.0;
-    bfra[1][3] = -bfra[1][3] / 2.0;
-    bfra[2][3] = -bfra[2][3] / 2.0;
+    bfra[0][3] = -ic[27] / 2.0;
+    bfra[1][3] = -ic[28] / 2.0;
+    bfra[2][3] = -ic[29] / 2.0;
     Qhalf = numeric.transpose(Qhalf);
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
@@ -394,7 +394,6 @@ export function get30Coordinates(ic, step, saveState = false) {
 	}
 
     crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
-
 
     let phoW = numeric.dot(watson2, calculateFrame(ic.slice(18, 24), true));
     if (saveState) frames.push(phoW);

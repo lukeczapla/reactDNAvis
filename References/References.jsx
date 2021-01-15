@@ -106,8 +106,6 @@ function calculateFrame(ic, isphosphate = false) {
   uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
   uvec = numeric.sub(uvec, numeric.transpose(uvec));
 
-//  console.log(uvec);
-
   let v1 = numeric.dot(u, numeric.transpose(u))[0][0];
 
   let upuu = numeric.add(uvec, numeric.dot(uvec, uvec));
@@ -128,33 +126,26 @@ function calculateFrame(ic, isphosphate = false) {
   uvec[0][1] = -u[0][2]; uvec[0][2] = u[0][1]; uvec[1][2] = -u[0][0];
   uvec = numeric.sub(uvec, numeric.transpose(uvec));
 
-//  console.log(numeric.dot(u, numeric.transpose(u)));
   v1 = numeric.dot(u, numeric.transpose(u))[0][0];
-  //upuu = numeric.mul(upuu, 2.0/(1.0 + v1));
+
   upuu = numeric.add(uvec, numeric.dot(uvec, uvec));
   Qhalf = numeric.add(numeric.identity(3), numeric.mul(upuu, 2.0/(1.0+v1)));
 
   if (isphosphate) {
-//    let p__rot = [[0.28880532, -0.40811277, -0.8659639, 0.0],
-//                  [-0.50008344, 0.70707284, -0.50010651, 0.0],
-//                  [0.81639941, 0.57748763, 0.0, 0.0],
-//                  [0.0, 0.0, 0.0, 1.0]];
-//    result = numeric.dot(result, numeric.inv(p__rot));
+
     result[0][3] = v[0][0];
     result[1][3] = v[0][1];
     result[2][3] = v[0][2];
 
     return result;
+
   }
-  //console.log(JSON.stringify(Qhalf));
+
   let q = numeric.dot(Qhalf, numeric.transpose(v));
-  //let q = numeric.dot(v, Qhalf);
- // console.log(q[0][0]);
-  //result[0][3] = v[0][0];
-  //result[1][3] = v[0][1];
-  //result[2][3] = v[0][2];
   
-  result[0][3] = q[0][0]; result[1][3] = q[1][0]; result[2][3] = q[2][0];
+  result[0][3] = q[0][0]; 
+  result[1][3] = q[1][0]; 
+  result[2][3] = q[2][0];
 
   return result;
 
@@ -463,7 +454,6 @@ export function get30Coordinates(ic, step, saveState = false) {
     	bseq = bletters;
     }
     return result;
-//    return [W1, C1, W2, C2, P1, P2];  // from before
 }
 
 export function getAtomSets() {

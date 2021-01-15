@@ -12,6 +12,7 @@ class DThree extends Component {
     super(props);
     this.state = {
       modeNum : '0',
+      stepBy: 0,
       showIC: false,
       isDragging: false,
       useScale: true,
@@ -69,6 +70,42 @@ class DThree extends Component {
      isDragging: true
    });
  };
+ 
+ moveEigen() {
+    let cov = this.state.cov;
+    //console.log(cov);
+    let F = numeric.inv(cov);
+    let eigen = ref.jeigen(F);
+    let demo = this.state.mean;
+    demo = numeric.add(demo, numeric.mul(parseFloat(this.state.stepBy) * (this.state.useScale ? 1/Math.sqrt(eigen.eigenvalues[parseInt(this.state.modeNum)]) : 1.0), eigen.eigenvectors[parseInt(this.state.modeNum)]));
+    let points = ref.get30Coordinates(demo, this.state.tetramer, true);
+    let PhoW = ref.getAtomSets().atoms[1][1];
+    let PhoC = ref.getAtomSets().atoms[4][1];
+    ref3.getBasePlanes(ref.getAtomSets());
+    let midframe = ref.getMidFrame();
+    let px = PhoW.x - midframe[0][3];
+    let py = PhoW.y - midframe[1][3];
+    let pz = PhoW.z - midframe[2][3];
+	let pw = [
+		px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	];
+    px = PhoC.x - midframe[0][3];
+    py = PhoC.y - midframe[1][3];
+    pz = PhoC.z - midframe[2][3];	
+    let pc = [
+    	px*midframe[0][0]+py*midframe[1][0]+pz*midframe[2][0],
+		px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
+		px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
+	];
+	this.setState({
+		phoW: pw, 
+		phoC: pc, 
+		parameters3: ref3.getParameters(),
+		pdbText: ref.writePDB()
+	});
+ }
 
  componentWillUnmount() {
    this.mount.removeEventListener('mousemove', this.onMouseMove);
@@ -82,7 +119,7 @@ class DThree extends Component {
     //console.log(cov);
     let F = numeric.inv(cov);
     let eigen = ref.jeigen(F);
-    //console.log(eigen);
+    console.log(eigen);
     let eigenlist = [];
     eigen.eigenvalues.forEach((item, index) => {
 	let val = {index: index, value: item};
@@ -226,9 +263,14 @@ class DThree extends Component {
       const name = target.name;
       this.setState({
         [name] : value
+      }, () => {
+        if (name === 'stepBy' && value !== 0) {
+      	  this.moveEigen();
+        }      	
       });
       if (name === 'modeNum')
         this.setState({evalue: this.state.eigenvalues[parseInt(value)]});
+
   }
 
 
@@ -246,7 +288,7 @@ class DThree extends Component {
 	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>
         {this.state.eigenlist.map((value) => (
             <option key={value.value} value={value.index}>{value.index + ": eigenvalue: " + value.value}</option>
-        ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation</>
+        ))}</select> <input type="checkbox" name="useScale" onChange={this.inputChanged} checked={this.state.useScale}/> Scale by standard deviation<br/>Step Along Eigenvector<input type="number" step="0.1" onChange={this.inputChanged} name="stepBy" value={this.state.stepBy} /></>
         : null}
 	<div style={{border: "solid", margin: "auto", width:"600px", height: "600px", justifyContent: "center", textAlign: "center"}} ref={ref => (this.mount = ref)}></div>
 	  {this.state.eigenvectors.length > 0 ? <Eigenvector vector={this.state.eigenvectors[parseInt(this.state.modeNum)]}/> : null}<br/><br/>

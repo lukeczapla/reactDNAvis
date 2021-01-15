@@ -352,11 +352,11 @@ export function get30Coordinates(ic, step, saveState = false) {
 
     let crick = numeric.dot(A, bfra)
     let watson = numeric.dot(crick, calculateFrame(ic.slice(0, 6)));
+    crick[0][1] *= -1; crick[1][1] *= -1; crick[2][1] *= -1; crick[0][2] *= -1; crick[1][2] *= -1; crick[2][2] *= -1;
     if (saveState) {
     	frames.push(watson);
     	frames.push(crick);
 	}
-    crick[0][1] *= -1; crick[1][1] *= -1; crick[2][1] *= -1; crick[0][2] *= -1; crick[1][2] *= -1; crick[2][2] *= -1;
 
     // send true to use phoRotation matrix
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
@@ -388,12 +388,11 @@ export function get30Coordinates(ic, step, saveState = false) {
     }
     let crick2 = numeric.dot(A, bfra);
     let watson2 = numeric.dot(crick2, calculateFrame(ic.slice(24, 30)));
+    crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
     if (saveState) {
 		frames.push(watson2);
 		frames.push(crick2);
 	}
-
-    crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
 
     let phoW = numeric.dot(watson2, calculateFrame(ic.slice(18, 24), true));
     if (saveState) frames.push(phoW);

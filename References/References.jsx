@@ -5,6 +5,7 @@ let Qhalf = numeric.identity(4);
 let bseq = [];
 let bvalues = [];
 let frames = [];
+let bpstep = [];
 
 export const bases = [
         "SEQRES   1 A    1  A\n" +
@@ -66,6 +67,29 @@ export const bases = [
                 "END"
 ];
 
+// random number (Gaussian) generator
+let iset = 0;
+let gset = 0;
+
+export function randg() {
+
+  let v1, v2, fac, rsq;
+
+  if (iset === 0) {
+    do {
+      v1 = 2.0*Math.random() - 1.0;
+      v2 = 2.0*Math.random() - 1.0;
+      rsq = v1*v1+v2*v2;
+    } while ((rsq >= 1.0) || (rsq === 0));
+    fac = Math.sqrt(-2.0*Math.log(rsq)/rsq);
+    gset = v1*fac;
+    iset = 1;
+    return v2*fac;
+  } else {
+    iset = 0;
+    return gset;
+  }
+}
 
 export function parseBases() {
   let letters = ["A", "G", "T", "C", "pho"];
@@ -292,7 +316,7 @@ export function jeigen(a) {
 }
 
 
-function complement(s, rna) {
+export function complement(s, rna = false) {
     let result = "";
     if (s.charAt(1) === 'C')  result = "G";
     if (s.charAt(1) === 'T' || s.charAt(1) === 'U') result = "A";
@@ -310,28 +334,32 @@ function complement(s, rna) {
     return result;
 }
 
+// copy 2D array
+function clone(vec) {
+	let result = [];
+	result.length = vec.length;
+	for (let i = 0; i < vec.length; i++) {
+	  result[i] = [];
+	  result[i].length = vec[i].length;
+	  for (let j = 0; j < vec[i].length; j++) {
+	    result[i][j] = vec[i][j];
+	  }
+	}
+	return result;
+}
 
-export function get30Coordinates(ic, step, saveState = false) {
+export function get30Coordinates(ic, step, saveState = false, Ai = null) {
 
-//    if (Ai === undefined)
-//      let A = numeric.identity(4);
-//    else
-//      let A = Ai;
+	let A = numeric.identity(4);
+    if (Ai !== null) A = Ai;
+
 	if (saveState) frames = [];
-    let A = numeric.identity(4);
-    let bfra = calculateFrame(ic.slice(0, 6)); // first pairing pars
-    if (saveState) console.log(JSON.stringify(bfra));
+	
+	
+	// first base pair
+    let bfra = calculateFrame(ic.slice(0, 6));
+   // if (saveState) console.log(JSON.stringify(bfra));
 
-	let eig = jeigen(bfra);
-	let Asqrt = numeric.identity(4);
-	for (let i = 0; i < 4; i++) {
-		Asqrt[i][i] = Math.sqrt(eig.eigenvalues[i]);
-	}
-	let res = numeric.dot(numeric.dot(eig.eigenvectors, Asqrt), numeric.inv(eig.eigenvectors));
-	if (saveState) {
-		console.log(JSON.stringify(numeric.dot(Qhalf, Qhalf)));
-		console.log(JSON.stringify(bfra));
-	}
     bfra[0][3] = -ic[3] / 2.0;
     bfra[1][3] = -ic[4] / 2.0;
     bfra[2][3] = -ic[5] / 2.0;
@@ -349,11 +377,12 @@ export function get30Coordinates(ic, step, saveState = false) {
     	frames.push(crick);
 	}
 
-    // send true to use phoRotation matrix
+    // send true to calculateFrame to use phosphate coordinates
+    // crick 1 phosphate
     let phoC = numeric.dot(crick, calculateFrame(ic.slice(6, 12), true));
     if (saveState) frames.push(phoC);
 
-    // let's get the middle frame
+    // let's get the middle frame and save the bp 2 frame
     if (saveState) {
       stepM = numeric.add(calculateFrame(ic.slice(12, 18)), numeric.identity(4));
       for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
@@ -362,12 +391,13 @@ export function get30Coordinates(ic, step, saveState = false) {
       stepM[0][3] = stepM[0][3] / 2.0;
       stepM[1][3] = stepM[1][3] / 2.0;
       stepM[2][3] = stepM[2][3] / 2.0;
-      //console.log(JSON.stringify(stepM));
-      frames.push(calculateFrame(ic.slice(12, 18)));
+      frames.push(numeric.dot(A, calculateFrame(ic.slice(12, 18))));
     }
-    A = numeric.dot(numeric.identity(4), calculateFrame(ic.slice(12, 18)));
     
-
+    // base-pair step jump
+    A = numeric.dot(A, calculateFrame(ic.slice(12, 18)));
+    bpstep = clone(A);
+	// second pair
     bfra = calculateFrame(ic.slice(24, 30));
     
     bfra[0][3] = -ic[27] / 2.0;
@@ -377,6 +407,7 @@ export function get30Coordinates(ic, step, saveState = false) {
     for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
       bfra[i][j] = Qhalf[i][j];
     }
+    
     let crick2 = numeric.dot(A, bfra);
     let watson2 = numeric.dot(crick2, calculateFrame(ic.slice(24, 30)));
     crick2[0][1] *= -1; crick2[1][1] *= -1; crick2[2][1] *= -1; crick2[0][2] *= -1; crick2[1][2] *= -1; crick2[2][2] *= -1;
@@ -385,6 +416,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 		frames.push(crick2);
 	}
 
+	// watson 2 phosphate
     let phoW = numeric.dot(watson2, calculateFrame(ic.slice(18, 24), true));
     if (saveState) frames.push(phoW);
 
@@ -404,7 +436,7 @@ export function get30Coordinates(ic, step, saveState = false) {
   //  console.log(strW1+strC1+ " " + strW2 + strC2);
 
     let ldict = parseBases();
-  //  console.log(strW1+strW2+"*"+strC1+strC2);
+
     W1 = [...ldict[strW1]];
     W2 = [...ldict[strW2]];
     C1 = [...ldict[strC1]];
@@ -414,8 +446,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 
     let current = 1;
     let result = [];
-    //let refs = [watson, crick, watson2, crick2, phoC, phoW];
-    //console.log(refs);
+
     let values = [];
     let bletters = [strW1, "pho", strW2, strC2, "pho", strC1];
     [W1, P1, W2, C2, P2, C1].forEach(function(element) {
@@ -426,8 +457,7 @@ export function get30Coordinates(ic, step, saveState = false) {
         if (current === 4) ref = crick2;
         if (current === 5) ref = phoC;
         if (current === 6) ref = crick;
-        if (saveState) console.log(JSON.stringify(ref));
-      //  console.log(ref);
+
 		let set = [];
         for (let i = 0; i < element.length; i++) {
             let toAdd = {...element[i]};
@@ -449,6 +479,7 @@ export function get30Coordinates(ic, step, saveState = false) {
 		values.push(set);
         current++;
     });
+    
     if (saveState) {
     	bvalues = values;
     	bseq = bletters;
@@ -526,6 +557,10 @@ export function writePDB() {
 
 export function getFrames() {
 	return frames;
+}
+
+export function getStep() {
+	return bpstep;
 }
 
 

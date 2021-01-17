@@ -40,13 +40,46 @@ class DThree extends Component {
     this.renderer = null;
   }
 
- onMouseMove = ({clientX, clientY}) => {
-   if (!this.state.isDragging) return;
-   this.setState({
-     translateX: clientX - this.state.startX + this.state.lastTranslateX,
-     translateY: clientY - this.state.startY + this.state.lastTranslateY
-   });
- };
+  onMouseMove = ({clientX, clientY}) => {
+    if (!this.state.isDragging) return;
+    this.setState({
+      translateX: clientX - this.state.startX + this.state.lastTranslateX,
+      translateY: clientY - this.state.startY + this.state.lastTranslateY
+    });
+  };
+
+persistenceLength = () => {
+  let cov = this.state.cov;
+  //console.log(cov);
+  let F = numeric.inv(cov);
+  let eigen = ref.jeigen(F);
+  let factor = [[]];
+  factor[0].length = 30;
+  for (let i = 0; i < 30; i++) {
+  	factor[0][i] = 1/Math.sqrt(eigen.eigenvalues[i]);
+  }
+  let step0 = [this.state.mean];
+  let A = numeric.identity(4);
+  for (let i = 0; i < 4; i++) A[i][i] = 0;
+  for (let i = 0; i < 20000; i++) {
+  	let v = [[]];
+  	v[0].length = 30;
+  	for (let i = 0; i < 30; i++) v[0][i] = factor[0][i]*ref.randg();
+  	let step = numeric.add(numeric.transpose(numeric.dot(eigen.eigenvectors, numeric.transpose(v))), step0);
+  	//console.log(step);
+  	let coord = [];
+  	coord.length = 30;
+  	for (let i = 0; i < 30; i++) coord[i] = step[0][i];
+  	ref.get30Coordinates(coord, this.state.tetramer);
+  	let bpstep = ref.getStep();
+	A = numeric.add(A, bpstep);
+  }
+  A = numeric.mul(1/20000.0, A);
+  for (let i = 0; i < 2000; i++) {
+  	A = numeric.dot(A, A);
+  }
+  alert(A[2][3]);
+}
 
  onMouseUp = ({clientX, clientY}) => {
    this.mount.removeEventListener('mousemove', this.onMouseMove);
@@ -119,7 +152,7 @@ class DThree extends Component {
     //console.log(cov);
     let F = numeric.inv(cov);
     let eigen = ref.jeigen(F);
-    console.log(eigen);
+    //console.log(eigen);
     let eigenlist = [];
     eigen.eigenvalues.forEach((item, index) => {
 	let val = {index: index, value: item};
@@ -283,6 +316,7 @@ class DThree extends Component {
     
     return (<>
     	<div className="data-window">
+    <button onClick={this.persistenceLength}>Calculate Persistence Length</button><br/>
 	<b>Mean state:</b><input type="checkbox" name="showIC" checked={this.state.showIC} onChange={this.inputChanged}/>Show original internal (rad/5) form<table><tbody>{meanvals.map((value,index) => (<tr><td>{valtitles[index]}</td><td>{(value[0]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{(value[1]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{(value[2]*(this.state.showIC ? 1 : 11.4591559*ref.scale(value[0],value[1],value[2]))).toFixed(5)}</td><td>{value[3]}</td><td>{(value[4]).toFixed(5)}</td><td>{(value[5]).toFixed(5)}</td></tr>))}</tbody></table>
 	<b>Phosphates:</b><table><thead style={{border: "0 none"}}><tr><td></td><td>x_p</td><td>y_p</td><td>z_p</td></tr></thead><tbody><tr><td>watson</td><td>{this.state.phoW[0].toFixed(5)}</td><td>{this.state.phoW[1].toFixed(5)}</td><td>{this.state.phoW[2].toFixed(5)}</td></tr><tr><td>crick</td><td>{this.state.phoC[0].toFixed(5)}</td><td>{this.state.phoC[1].toFixed(5)}</td><td>{this.state.phoC[2].toFixed(5)}</td></tr></tbody></table>
 	{this.state.eigenvalues.length > 0 ? <><select value={this.state.modeNum} name="modeNum" onChange={this.inputChanged}>

@@ -51,6 +51,8 @@ class TetramerReader extends React.Component {
   	let dataSet = [];
 	fetch(set[0]).then((r) => r.text()).then(text => {
       let lines = text.split("\n");
+      let sumTwist = 0;
+      let sumTwist2 = 0;
       lines.forEach(line => {
         let litems = line.split(" ");
         if (litems.length < 31) return;
@@ -60,11 +62,17 @@ class TetramerReader extends React.Component {
           steps.push(parseFloat(litems[i+1]));
         }
         
+        if (ref.complement(litems[0]) === litems[0]) sumTwist += steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
+        else sumTwist += 2*steps[14]*11.4591559*ref.scale(steps[12], steps[13], steps[14]);
+        
         let points = ref.get30Coordinates(steps, litems[0], true);
 	    let PhoW = ref.getAtomSets().atoms[1][1];
 	    let PhoC = ref.getAtomSets().atoms[4][1];
 		ref3.getBasePlanes(ref.getAtomSets());
         let stepParameters = ref3.getParameters();
+
+        if (ref.complement(litems[0]) === litems[0]) sumTwist2 += stepParameters[1][2];
+        else sumTwist2 += 2*stepParameters[1][2];
 
 		let midframe = ref.getMidFrame();
 		let px = PhoW.x - midframe[0][3];
@@ -83,9 +91,11 @@ class TetramerReader extends React.Component {
 			px*midframe[0][1]+py*midframe[1][1]+pz*midframe[2][1],
 			px*midframe[0][2]+py*midframe[1][2]+pz*midframe[2][2]
 		];
-		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], parseFloat(litems[15])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[13])*11.4591559*ref.scale(litems[13], litems[14], litems[15]), parseFloat(litems[14])*11.4591559*ref.scale(litems[13], litems[14], litems[15])];
+		let dataItem = [litems[0], stepParameters[1][2], pw[0], pw[1], pw[2], pc[0], pc[1], pc[2], steps[14]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[12]*11.4591559*ref.scale(steps[12],steps[13],steps[14]), steps[13]*11.4591559*ref.scale(steps[12],steps[13],steps[14])];
         dataSet.push(dataItem);
       });
+      console.log(set[0] + " twist = " + sumTwist/256.0);
+      console.log(set[0] + " twist 3DNA = " + sumTwist2/256.0);
       //console.log(JSON.stringify(dataSet));
       currentAnalysis[index] = dataSet;
 	  count++;
@@ -128,12 +138,12 @@ class TetramerReader extends React.Component {
     if (parseInt(this.state.selected) === 2) {
       f1 = process.env.PUBLIC_URL+"mean_cgDNA_136.txt";
       f2 = process.env.PUBLIC_URL+"cov_cgDNA_136.txt";
-      field = "cgDNA+ model trained on MD microABC library with AMBER parmbsc0"
+      field = "cgDNA+ model trained on MD palindrome library with AMBER parmbsc1"
     }
     if (parseInt(this.state.selected) === 3) {
       f1 = process.env.PUBLIC_URL+"MD_mean_bstj_cgf_136.txt";
       f2 = process.env.PUBLIC_URL+"MD_cov_bstj_cgf_136.txt";
-      field = "MD data directly from MD microABC library with AMBER parmbsc0"
+      field = "MD data directly from palindrome library with AMBER parmbsc1"
     }
     if (parseInt(this.state.selected) === 4) {
       f1 = process.env.PUBLIC_URL+"mean_TX2_3S_C1_cg_136.txt";
